@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gastos Familiares</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header__left">
+      <span class="header__logo">💰 Gastos Familiares</span>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="nav" id="navMenu">
+      <a href="#dashboard" class="nav__link">Dashboard</a>
+      <a href="#nuevo-gasto" class="nav__link">Nuevo gasto</a>
+      <a href="#lista-gastos" class="nav__link">Mis gastos</a>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- SECCIÓN: FOTO FAMILIAR -->
+    <section class="familia-card">
+      <div class="familia-card__foto">
+        <img id="fotoFamiliar" src="" alt="Foto familiar" />
+      </div>
+      <div class="familia-card__info">
+        <h2 id="nombreFamilia">Mi Familia</h2>
+        <label class="btn btn--secondary" for="inputFoto">Subir / cambiar foto</label>
+        <input type="file" id="inputFoto" accept="image/*" hidden />
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="dashboard">
+      <h2 class="section-title">Dashboard</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card__label">Total gastado</span>
+          <span class="stat-card__value" id="statTotal">Bs. 0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Gastos este mes</span>
+          <span class="stat-card__value" id="statMes">Bs. 0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">N° de registros</span>
+          <span class="stat-card__value" id="statCantidad">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Categoría top</span>
+          <span class="stat-card__value" id="statCategoriaTop">-</span>
+        </div>
+      </div>
+
+      <div class="categorias-breakdown">
+        <h3 class="section-subtitle">Gastos por categoría</h3>
+        <div id="categoriasContainer"></div>
+      </div>
+    </section>
+
+    <!-- FORMULARIO NUEVO GASTO -->
+    <section id="nuevo-gasto" class="form-section">
+      <h2 class="section-title">Registrar nuevo gasto</h2>
+      <form id="formGasto" class="form-gasto">
+        <input type="hidden" id="gastoId" />
+
+        <div class="form-group">
+          <label for="descripcion">Descripción</label>
+          <input type="text" id="descripcion" required placeholder="Ej: Compra supermercado" />
+        </div>
+
+        <div class="form-group">
+          <label for="monto">Monto (Bs.)</label>
+          <input type="number" id="monto" step="0.01" min="0" required placeholder="0.00" />
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoría</label>
+          <select id="categoria">
+            <option value="Alimentación">Alimentación</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Salud">Salud</option>
+            <option value="Educación">Educación</option>
+            <option value="Entretenimiento">Entretenimiento</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" required />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="btnGuardar">Guardar gasto</button>
+          <button type="button" class="btn btn--ghost" id="btnCancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- LISTA DE GASTOS -->
+    <section id="lista-gastos" class="lista-section">
+      <h2 class="section-title">Mis gastos</h2>
+      <div class="tabla-wrapper">
+        <table class="tabla-gastos">
+          <thead>
+            <tr>
+              <th>Descripción</th>
+              <th>Categoría</th>
+              <th>Monto</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaGastosBody">
+            <!-- filas generadas por JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Proyecto educativo · Técnico Medio en Sistemas Informáticos</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
