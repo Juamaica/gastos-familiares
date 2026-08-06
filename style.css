@@ -1,38 +1,58 @@
+/* ================= FUENTES =================
+   Agregar en el <head> del HTML, antes de este archivo:
+
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+================================================= */
+
 /* ================= VARIABLES ================= */
 :root {
-  --color-bg: #f4f6fb;
-  --color-surface: #ffffff;
-  --color-primary: #4f46e5;
-  --color-primary-dark: #3730a3;
-  --color-secondary: #06b6d4;
-  --color-text: #1f2937;
-  --color-text-light: #6b7280;
-  --color-border: #e5e7eb;
-  --color-danger: #ef4444;
-  --color-success: #10b981;
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --color-bg: #f5efe3;
+  --color-surface: #fffdf8;
+  --color-primary: #1f3d2e;
+  --color-primary-dark: #14291f;
+  --color-accent: #c08a28;
+  --color-ink: #2b2620;
+  --color-ink-light: #6b6255;
+  --color-border: #e3d9c4;
+  --color-expense: #a63d2f;
+  --color-success: #4f7a5a;
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+  --radius: 8px;
+  --shadow: 0 3px 10px rgba(43, 38, 32, 0.08);
   --transition: 0.2s ease;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
   background: var(--color-bg);
-  color: var(--color-text);
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 100% 2.2rem;
+  color: var(--color-ink);
   line-height: 1.5;
 }
 
 .section-title {
-  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
   color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
 }
 
 .section-subtitle {
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
   margin-bottom: 0.8rem;
+  color: var(--color-ink);
 }
 
 /* ================= HEADER ================= */
@@ -40,7 +60,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-surface);
+  background: var(--color-primary);
   padding: 1rem 1.5rem;
   box-shadow: var(--shadow);
   position: sticky;
@@ -49,9 +69,11 @@ body {
 }
 
 .header__logo {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fdf8ec;
+  letter-spacing: 0.01em;
 }
 
 .nav {
@@ -61,13 +83,17 @@ body {
 
 .nav__link {
   text-decoration: none;
-  color: var(--color-text);
+  color: #e8e0cd;
   font-weight: 500;
-  transition: color var(--transition);
+  font-size: 0.92rem;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
 }
 
 .nav__link:hover {
-  color: var(--color-primary);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 /* Hamburguesa (oculta en escritorio) */
@@ -86,7 +112,7 @@ body {
   display: block;
   height: 3px;
   width: 100%;
-  background: var(--color-text);
+  background: #fdf8ec;
   border-radius: 2px;
   transition: transform var(--transition), opacity var(--transition);
 }
@@ -105,16 +131,30 @@ body {
   gap: 2rem;
 }
 
-/* ================= FAMILIA CARD ================= */
+/* ================= FAMILIA CARD (tapa de libreta) ================= */
 .familia-card {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background: var(--color-primary);
+  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   border-radius: var(--radius);
-  padding: 1.5rem;
+  border: 1px solid var(--color-primary-dark);
+  padding: 1.5rem 1.75rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  color: #fff;
+  color: #fdf8ec;
   box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.familia-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--color-accent);
 }
 
 .familia-card__foto img {
@@ -122,12 +162,16 @@ body {
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  background: rgba(255, 255, 255, 0.3);
-  border: 3px solid #fff;
+  background: rgba(255, 255, 255, 0.15);
+  border: 3px solid var(--color-accent);
 }
 
 .familia-card__info h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
   margin-bottom: 0.6rem;
+  color: #fdf8ec;
 }
 
 /* ================= BOTONES ================= */
@@ -137,41 +181,42 @@ body {
   border-radius: var(--radius);
   border: none;
   cursor: pointer;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   transition: transform var(--transition), background var(--transition);
 }
 
 .btn:hover { transform: translateY(-1px); }
 
 .btn--primary {
-  background: var(--color-primary);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
 }
 
-.btn--primary:hover { background: var(--color-primary-dark); }
+.btn--primary:hover { background: #a8781f; }
 
 .btn--secondary {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 1px solid #fff;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fdf8ec;
+  border: 1px solid rgba(253, 248, 236, 0.5);
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--color-text-light);
+  color: var(--color-ink-light);
   border: 1px solid var(--color-border);
 }
 
 .btn--small {
   padding: 0.35rem 0.7rem;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 
-.btn--edit { background: var(--color-secondary); color: #fff; }
-.btn--delete { background: var(--color-danger); color: #fff; }
+.btn--edit { background: var(--color-primary); color: #fdf8ec; }
+.btn--delete { background: var(--color-expense); color: #fdf8ec; }
 
-/* ================= STATS GRID ================= */
+/* ================= STATS GRID (fichas de libreta) ================= */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -182,31 +227,36 @@ body {
 .stat-card {
   background: var(--color-surface);
   border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
   box-shadow: var(--shadow);
-  padding: 1.2rem;
+  padding: 1.1rem 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
 .stat-card__label {
-  font-size: 0.8rem;
-  color: var(--color-text-light);
+  font-size: 0.75rem;
+  color: var(--color-ink-light);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
 }
 
 .stat-card__value {
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.35rem;
+  font-weight: 600;
   color: var(--color-primary-dark);
 }
 
-/* ================= CATEGORIAS BREAKDOWN ================= */
+/* ================= CATEGORIAS BREAKDOWN (registro rayado) ================= */
 .categorias-breakdown {
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 1.2rem;
+  padding: 1.2rem 1.4rem;
   box-shadow: var(--shadow);
 }
 
@@ -218,30 +268,39 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  margin-bottom: 0.3rem;
-  color: var(--color-text-light);
+  margin-bottom: 0.35rem;
+  color: var(--color-ink-light);
+}
+
+.categoria-bar__label span:last-child {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-expense);
+  font-weight: 600;
 }
 
 .categoria-bar__track {
   background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: 20px;
   overflow: hidden;
-  height: 10px;
+  height: 9px;
 }
 
 .categoria-bar__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  background: var(--color-primary);
   border-radius: 20px;
   transition: width 0.4s ease;
 }
 
-/* ================= FORMULARIO ================= */
+/* ================= FORMULARIO (ficha / recibo) ================= */
 .form-section,
 .lista-section {
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 1.2rem;
+  padding: 1.2rem 1.4rem;
   box-shadow: var(--shadow);
 }
 
@@ -258,16 +317,27 @@ body {
 }
 
 .form-group label {
-  font-size: 0.85rem;
-  color: var(--color-text-light);
+  font-size: 0.8rem;
+  color: var(--color-ink-light);
+  font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
-  padding: 0.6rem;
+  padding: 0.6rem 0.7rem;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: 6px;
+  font-family: var(--font-body);
   font-size: 0.95rem;
+  background: #fffefb;
+  color: var(--color-ink);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(31, 61, 46, 0.12);
 }
 
 .form-actions {
@@ -276,7 +346,7 @@ body {
   gap: 0.8rem;
 }
 
-/* ================= TABLA ================= */
+/* ================= TABLA (libro mayor) ================= */
 .tabla-wrapper {
   overflow-x: auto;
 }
@@ -295,9 +365,22 @@ body {
 }
 
 .tabla-gastos th {
-  color: var(--color-text-light);
+  color: var(--color-ink-light);
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.tabla-gastos td:nth-child(3) {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-expense);
+  font-weight: 600;
+}
+
+.tabla-gastos tbody tr:hover {
+  background: var(--color-bg);
 }
 
 .tabla-gastos td .acciones {
@@ -309,8 +392,9 @@ body {
 .footer {
   text-align: center;
   padding: 1.5rem;
-  color: var(--color-text-light);
-  font-size: 0.8rem;
+  color: var(--color-ink-light);
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
 }
 
 /* ================= RESPONSIVE ================= */
@@ -324,7 +408,7 @@ body {
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--color-surface);
+    background: var(--color-primary);
     flex-direction: column;
     gap: 0;
     max-height: 0;
@@ -339,7 +423,7 @@ body {
 
   .nav__link {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid rgba(253, 248, 236, 0.15);
   }
 
   .stats-grid {
@@ -370,6 +454,7 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: 0.6rem;
+    background: var(--color-surface);
   }
 
   .tabla-gastos td {
@@ -380,7 +465,7 @@ body {
   .tabla-gastos td::before {
     content: attr(data-label);
     font-weight: 600;
-    color: var(--color-text-light);
+    color: var(--color-ink-light);
     display: inline-block;
     width: 110px;
   }
