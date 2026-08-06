@@ -30,86 +30,90 @@
 
   <main class="main">
 
-    <!-- SECCIÓN: FOTO FAMILIAR -->
-    <section class="familia-card">
-      <div class="familia-card__foto">
+    <!-- SECCIÓN: FRANJA FAMILIAR -->
+    <section class="familia-strip">
+      <div class="familia-strip__foto">
         <img id="fotoFamiliar" src="" alt="Foto familiar" />
       </div>
-      <div class="familia-card__info">
-        <h2 id="nombreFamilia">Mi Familia</h2>
-        <label class="btn btn--secondary" for="inputFoto">Subir / cambiar foto</label>
-        <input type="file" id="inputFoto" accept="image/*" hidden />
-      </div>
+      <h2 id="nombreFamilia" class="familia-strip__nombre">Mi Familia</h2>
+      <label class="btn btn--secondary btn--small" for="inputFoto">Cambiar foto</label>
+      <input type="file" id="inputFoto" accept="image/*" hidden />
     </section>
 
     <!-- DASHBOARD -->
     <section id="dashboard" class="dashboard">
       <h2 class="section-title">Dashboard</h2>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span class="stat-card__label">Total gastado</span>
-          <span class="stat-card__value" id="statTotal">Bs. 0</span>
+      <!-- Línea de totales tipo recibo -->
+      <div class="stats-strip">
+        <div class="stat-item">
+          <span class="stat-item__label">Total gastado</span>
+          <span class="stat-item__value" id="statTotal">Bs. 0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-card__label">Gastos este mes</span>
-          <span class="stat-card__value" id="statMes">Bs. 0</span>
+        <div class="stat-item">
+          <span class="stat-item__label">Gastos este mes</span>
+          <span class="stat-item__value" id="statMes">Bs. 0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-card__label">N° de registros</span>
-          <span class="stat-card__value" id="statCantidad">0</span>
+        <div class="stat-item">
+          <span class="stat-item__label">N° de registros</span>
+          <span class="stat-item__value" id="statCantidad">0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-card__label">Categoría top</span>
-          <span class="stat-card__value" id="statCategoriaTop">-</span>
+        <div class="stat-item">
+          <span class="stat-item__label">Categoría top</span>
+          <span class="stat-item__value" id="statCategoriaTop">-</span>
         </div>
       </div>
 
-      <div class="categorias-breakdown">
-        <h3 class="section-subtitle">Gastos por categoría</h3>
-        <div id="categoriasContainer"></div>
+      <!-- Dos columnas: categorías | ficha de nuevo gasto -->
+      <div class="dashboard-columns">
+
+        <div class="categorias-breakdown">
+          <h3 class="section-subtitle">Gastos por categoría</h3>
+          <div id="categoriasContainer"></div>
+        </div>
+
+        <!-- FORMULARIO NUEVO GASTO (ficha) -->
+        <section id="nuevo-gasto" class="form-section">
+          <h3 class="section-subtitle">Registrar nuevo gasto</h3>
+          <form id="formGasto" class="form-gasto">
+            <input type="hidden" id="gastoId" />
+
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <input type="text" id="descripcion" required placeholder="Ej: Compra supermercado" />
+            </div>
+
+            <div class="form-group">
+              <label for="monto">Monto (Bs.)</label>
+              <input type="number" id="monto" step="0.01" min="0" required placeholder="0.00" />
+            </div>
+
+            <div class="form-group">
+              <label for="categoria">Categoría</label>
+              <select id="categoria">
+                <option value="Alimentación">Alimentación</option>
+                <option value="Transporte">Transporte</option>
+                <option value="Servicios">Servicios</option>
+                <option value="Salud">Salud</option>
+                <option value="Educación">Educación</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+                <option value="Otros">Otros</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fecha">Fecha</label>
+              <input type="date" id="fecha" required />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary" id="btnGuardar">Guardar gasto</button>
+              <button type="button" class="btn btn--ghost" id="btnCancelar" hidden>Cancelar edición</button>
+            </div>
+          </form>
+        </section>
+
       </div>
-    </section>
-
-    <!-- FORMULARIO NUEVO GASTO -->
-    <section id="nuevo-gasto" class="form-section">
-      <h2 class="section-title">Registrar nuevo gasto</h2>
-      <form id="formGasto" class="form-gasto">
-        <input type="hidden" id="gastoId" />
-
-        <div class="form-group">
-          <label for="descripcion">Descripción</label>
-          <input type="text" id="descripcion" required placeholder="Ej: Compra supermercado" />
-        </div>
-
-        <div class="form-group">
-          <label for="monto">Monto (Bs.)</label>
-          <input type="number" id="monto" step="0.01" min="0" required placeholder="0.00" />
-        </div>
-
-        <div class="form-group">
-          <label for="categoria">Categoría</label>
-          <select id="categoria">
-            <option value="Alimentación">Alimentación</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Salud">Salud</option>
-            <option value="Educación">Educación</option>
-            <option value="Entretenimiento">Entretenimiento</option>
-            <option value="Otros">Otros</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" required />
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn--primary" id="btnGuardar">Guardar gasto</button>
-          <button type="button" class="btn btn--ghost" id="btnCancelar" hidden>Cancelar edición</button>
-        </div>
-      </form>
     </section>
 
     <!-- LISTA DE GASTOS -->
