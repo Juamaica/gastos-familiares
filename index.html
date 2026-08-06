@@ -89,21 +89,39 @@
             </div>
 
             <div class="form-group">
-              <label for="categoria">Categoría</label>
-              <select id="categoria">
-                <option value="Alimentación">Alimentación</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Servicios">Servicios</option>
-                <option value="Salud">Salud</option>
-                <option value="Educación">Educación</option>
-                <option value="Entretenimiento">Entretenimiento</option>
-                <option value="Otros">Otros</option>
-              </select>
+              <label for="categoriaDisplay">Categoría</label>
+              <div class="select-picker" id="categoriaPicker">
+                <button type="button" class="select-picker__input" id="categoriaDisplay"></button>
+                <select id="categoria" hidden>
+                  <option value="Alimentación">Alimentación</option>
+                  <option value="Transporte">Transporte</option>
+                  <option value="Servicios">Servicios</option>
+                  <option value="Salud">Salud</option>
+                  <option value="Educación">Educación</option>
+                  <option value="Entretenimiento">Entretenimiento</option>
+                  <option value="Otros">Otros</option>
+                </select>
+                <div class="select-picker__panel" id="categoriaPanel" hidden></div>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="fecha">Fecha</label>
-              <input type="date" id="fecha" required />
+              <label for="fechaDisplay">Fecha</label>
+              <div class="date-picker" id="datePicker">
+                <button type="button" class="date-picker__input" id="fechaDisplay"></button>
+                <input type="hidden" id="fecha" required />
+                <div class="date-picker__panel" id="datePanel" hidden>
+                  <div class="date-picker__header">
+                    <button type="button" class="date-picker__nav" id="dpPrev" aria-label="Mes anterior">‹</button>
+                    <span id="dpMonthLabel"></span>
+                    <button type="button" class="date-picker__nav" id="dpNext" aria-label="Mes siguiente">›</button>
+                  </div>
+                  <div class="date-picker__weekdays">
+                    <span>D</span><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span>
+                  </div>
+                  <div class="date-picker__grid" id="dpGrid"></div>
+                </div>
+              </div>
             </div>
 
             <div class="form-actions">
@@ -118,7 +136,12 @@
 
     <!-- LISTA DE GASTOS -->
     <section id="lista-gastos" class="lista-section">
-      <h2 class="section-title">Mis gastos</h2>
+      <div class="lista-header">
+        <h2 class="section-title">Mis gastos</h2>
+        <button type="button" class="btn btn--ghost btn--small" id="btnRefrescar">
+          <span id="refrescarIcono">↻</span> Actualizar
+        </button>
+      </div>
       <div class="tabla-wrapper">
         <table class="tabla-gastos">
           <thead>
