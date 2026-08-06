@@ -1,6 +1,5 @@
 // =========================================================
 // app.js - Lógica principal de la aplicación
-// No es necesario modificar este archivo para desplegar el proyecto
 // =========================================================
 
 const CATEGORIAS = [
@@ -99,6 +98,146 @@ document.getElementById("inputFoto").addEventListener("change", async (e) => {
   document.getElementById("fotoFamiliar").src = foto_url;
 });
 
+// ---------- DATE PICKER CUSTOM ----------
+const MESES_ABBR = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const MESES_FULL = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+];
+
+const fechaInput = document.getElementById("fecha");
+const fechaDisplay = document.getElementById("fechaDisplay");
+const datePicker = document.getElementById("datePicker");
+const datePanel = document.getElementById("datePanel");
+const dpGrid = document.getElementById("dpGrid");
+const dpMonthLabel = document.getElementById("dpMonthLabel");
+const dpPrev = document.getElementById("dpPrev");
+const dpNext = document.getElementById("dpNext");
+
+let vistaCalendario = new Date();
+
+function pad2(n) {
+  return n < 10 ? "0" + n : "" + n;
+}
+
+function fechaAISO(date) {
+  return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+}
+
+function isoAFecha(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function setFecha(date) {
+  fechaInput.value = fechaAISO(date);
+  fechaDisplay.textContent = `${date.getDate()} ${MESES_ABBR[date.getMonth()]} ${date.getFullYear()}`;
+  vistaCalendario = new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+function renderCalendario() {
+  dpMonthLabel.textContent = `${MESES_FULL[vistaCalendario.getMonth()]} ${vistaCalendario.getFullYear()}`;
+  dpGrid.innerHTML = "";
+
+  const year = vistaCalendario.getFullYear();
+  const month = vistaCalendario.getMonth();
+  const primerDia = new Date(year, month, 1).getDay();
+  const diasEnMes = new Date(year, month + 1, 0).getDate();
+  const seleccionada = fechaInput.value ? fechaAISO(isoAFecha(fechaInput.value)) : null;
+  const hoy = fechaAISO(new Date());
+
+  for (let i = 0; i < primerDia; i++) {
+    const vacio = document.createElement("span");
+    vacio.className = "date-picker__day date-picker__day--empty";
+    dpGrid.appendChild(vacio);
+  }
+
+  for (let d = 1; d <= diasEnMes; d++) {
+    const fechaDia = new Date(year, month, d);
+    const isoDia = fechaAISO(fechaDia);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "date-picker__day";
+    if (isoDia === hoy) btn.classList.add("date-picker__day--today");
+    if (isoDia === seleccionada) btn.classList.add("date-picker__day--selected");
+    btn.textContent = d;
+    btn.addEventListener("click", () => {
+      setFecha(fechaDia);
+      datePanel.hidden = true;
+    });
+    dpGrid.appendChild(btn);
+  }
+}
+
+fechaDisplay.addEventListener("click", () => {
+  datePanel.hidden = !datePanel.hidden;
+  categoriaPanel.hidden = true;
+  if (!datePanel.hidden) renderCalendario();
+});
+
+dpPrev.addEventListener("click", () => {
+  vistaCalendario = new Date(vistaCalendario.getFullYear(), vistaCalendario.getMonth() - 1, 1);
+  renderCalendario();
+});
+
+dpNext.addEventListener("click", () => {
+  vistaCalendario = new Date(vistaCalendario.getFullYear(), vistaCalendario.getMonth() + 1, 1);
+  renderCalendario();
+});
+
+document.addEventListener("click", (e) => {
+  if (!datePicker.contains(e.target)) datePanel.hidden = true;
+});
+
+// ---------- SELECT PICKER CUSTOM (categoría) ----------
+const categoriaSelect = document.getElementById("categoria");
+const categoriaDisplay = document.getElementById("categoriaDisplay");
+const categoriaPicker = document.getElementById("categoriaPicker");
+const categoriaPanel = document.getElementById("categoriaPanel");
+
+function renderCategorias() {
+  categoriaPanel.innerHTML = "";
+  CATEGORIAS.forEach((cat) => {
+    const opt = document.createElement("button");
+    opt.type = "button";
+    opt.className = "select-picker__option";
+    if (cat === categoriaSelect.value) opt.classList.add("select-picker__option--selected");
+    opt.textContent = cat;
+    opt.addEventListener("click", () => {
+      setCategoria(cat);
+      categoriaPanel.hidden = true;
+    });
+    categoriaPanel.appendChild(opt);
+  });
+}
+
+function setCategoria(cat) {
+  categoriaSelect.value = cat;
+  categoriaDisplay.textContent = cat;
+}
+
+categoriaDisplay.addEventListener("click", () => {
+  categoriaPanel.hidden = !categoriaPanel.hidden;
+  datePanel.hidden = true;
+  if (!categoriaPanel.hidden) renderCategorias();
+});
+
+document.addEventListener("click", (e) => {
+  if (!categoriaPicker.contains(e.target)) categoriaPanel.hidden = true;
+});
+
+// ---------- BOTÓN REFRESCAR LISTA ----------
+const btnRefrescar = document.getElementById("btnRefrescar");
+const refrescarIcono = document.getElementById("refrescarIcono");
+
+btnRefrescar.addEventListener("click", async () => {
+  refrescarIcono.classList.add("girando");
+  btnRefrescar.disabled = true;
+  await cargarGastos();
+  refrescarIcono.classList.remove("girando");
+  btnRefrescar.disabled = false;
+});
+
 // ---------- CRUD GASTOS ----------
 const form = document.getElementById("formGasto");
 const btnCancelar = document.getElementById("btnCancelar");
@@ -131,7 +270,8 @@ btnCancelar.addEventListener("click", resetForm);
 function resetForm() {
   form.reset();
   document.getElementById("gastoId").value = "";
-  document.getElementById("fecha").valueAsDate = new Date();
+  setFecha(new Date());
+  setCategoria(CATEGORIAS[0]);
   editando = false;
   btnCancelar.hidden = true;
   document.getElementById("btnGuardar").textContent = "Guardar gasto";
@@ -182,8 +322,8 @@ window.editarGasto = async function (id) {
   document.getElementById("gastoId").value = data.id;
   document.getElementById("descripcion").value = data.descripcion;
   document.getElementById("monto").value = data.monto;
-  document.getElementById("categoria").value = data.categoria;
-  document.getElementById("fecha").value = data.fecha;
+  setCategoria(data.categoria);
+  setFecha(isoAFecha(data.fecha));
 
   editando = true;
   btnCancelar.hidden = false;
@@ -266,6 +406,7 @@ function pintarCategorias(gastos) {
 }
 
 // ---------- INICIO ----------
-document.getElementById("fecha").valueAsDate = new Date();
+setFecha(new Date());
+setCategoria(CATEGORIAS[0]);
 cargarFamilia();
 cargarGastos();
