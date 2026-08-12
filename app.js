@@ -31,6 +31,13 @@ navMenu.querySelectorAll(".nav__link").forEach((link) => {
   });
 });
 
+// ---------- CERRAR SESIÓN ----------
+document.getElementById("btnCerrarSesion").addEventListener("click", async (e) => {
+  e.preventDefault();
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+});
+
 // ---------- FAMILIA (foto + nombre) ----------
 async function cargarFamilia() {
   const { data, error } = await supabase.from("familia").select("*").limit(1);
