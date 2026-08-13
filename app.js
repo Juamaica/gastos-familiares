@@ -478,6 +478,14 @@ function pintarTabla(gastos) {
   }
 
   gastos.forEach((g) => {
+    const esMio = g.miembro === obtenerPerfilActivo();
+    const acciones = esMio
+      ? `<div class="acciones">
+           <button class="btn btn--small btn--edit" onclick="editarGasto('${g.id}')">Editar</button>
+           <button class="btn btn--small btn--delete" onclick="eliminarGasto('${g.id}')">Eliminar</button>
+         </div>`
+      : `<span class="acciones-bloqueadas" title="Solo ${g.miembro || "esa persona"} puede editar este gasto">🔒 No editable</span>`;
+
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td data-label="Descripción">${g.descripcion}</td>
@@ -485,12 +493,7 @@ function pintarTabla(gastos) {
       <td data-label="Miembro">${iconoDe(g.miembro)} ${g.miembro || "-"}</td>
       <td data-label="Monto">Bs. ${Number(g.monto).toFixed(2)}</td>
       <td data-label="Fecha">${g.fecha}</td>
-      <td data-label="Acciones">
-        <div class="acciones">
-          <button class="btn btn--small btn--edit" onclick="editarGasto('${g.id}')">Editar</button>
-          <button class="btn btn--small btn--delete" onclick="eliminarGasto('${g.id}')">Eliminar</button>
-        </div>
-      </td>
+      <td data-label="Acciones">${acciones}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -499,6 +502,10 @@ function pintarTabla(gastos) {
 window.editarGasto = async function (id) {
   const { data, error } = await supabase.from("gastos").select("*").eq("id", id).single();
   if (error) return mostrarToast("Error: " + error.message, "error");
+
+  if (data.miembro !== obtenerPerfilActivo()) {
+    return mostrarToast(`Solo ${data.miembro || "esa persona"} puede editar este gasto`, "error");
+  }
 
   document.getElementById("gastoId").value = data.id;
   document.getElementById("descripcion").value = data.descripcion;
@@ -513,6 +520,11 @@ window.editarGasto = async function (id) {
 };
 
 window.eliminarGasto = async function (id) {
+  const gasto = todosLosGastos.find((g) => g.id === id);
+  if (gasto && gasto.miembro !== obtenerPerfilActivo()) {
+    return mostrarToast(`Solo ${gasto.miembro || "esa persona"} puede eliminar este gasto`, "error");
+  }
+
   if (!confirm("¿Seguro que deseas eliminar este gasto?")) return;
 
   const { error } = await supabase.from("gastos").delete().eq("id", id);
