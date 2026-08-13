@@ -159,15 +159,19 @@
         <h2 class="section-title">Mis gastos</h2>
         <div class="lista-header__acciones">
           <div class="filtro-miembro">
-            <label for="filtroMiembro">Ver gastos de:</label>
-            <select id="filtroMiembro">
-              <option value="todos">Todos</option>
-              <option value="Mamá">Mamá</option>
-              <option value="Papá">Papá</option>
-              <option value="Hermano/a">Hermano/a</option>
-              <option value="Yo">Yo</option>
-              <option value="Otro">Otro</option>
-            </select>
+            <label for="filtroMiembroDisplay">Ver gastos de:</label>
+            <div class="select-picker select-picker--filtro" id="filtroMiembroPicker">
+              <button type="button" class="select-picker__input" id="filtroMiembroDisplay">Todos</button>
+              <select id="filtroMiembro" hidden>
+                <option value="todos">Todos</option>
+                <option value="Mamá">Mamá</option>
+                <option value="Papá">Papá</option>
+                <option value="Hermano/a">Hermano/a</option>
+                <option value="Yo">Yo</option>
+                <option value="Otro">Otro</option>
+              </select>
+              <div class="select-picker__panel" id="filtroMiembroPanel" hidden></div>
+            </div>
           </div>
           <button type="button" class="btn btn--ghost btn--small" id="btnRefrescar">
             <span id="refrescarIcono">↻</span> Actualizar
