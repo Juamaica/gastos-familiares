@@ -12,8 +12,68 @@ const CATEGORIAS = [
   "Otros",
 ];
 
+const MIEMBROS = [
+  { nombre: "Mamá", icono: "👩" },
+  { nombre: "Papá", icono: "👨" },
+  { nombre: "Hermano/a", icono: "🧒" },
+  { nombre: "Yo", icono: "🙋" },
+  { nombre: "Otro", icono: "👤" },
+];
+
 let familiaId = null;
 let editando = false;
+
+// ---------- PERFIL ACTIVO (estilo Netflix) ----------
+const CLAVE_PERFIL = "gf_perfil_activo";
+const perfilModalOverlay = document.getElementById("perfilModalOverlay");
+const perfilModalGrid = document.getElementById("perfilModalGrid");
+const perfilActivoBadge = document.getElementById("perfilActivoBadge");
+const perfilActivoAvatar = document.getElementById("perfilActivoAvatar");
+const perfilActivoNombre = document.getElementById("perfilActivoNombre");
+
+function obtenerPerfilActivo() {
+  return localStorage.getItem(CLAVE_PERFIL);
+}
+
+function iconoDe(nombre) {
+  const m = MIEMBROS.find((x) => x.nombre === nombre);
+  return m ? m.icono : "👤";
+}
+
+function pintarPerfilActivo() {
+  const activo = obtenerPerfilActivo();
+  if (activo) {
+    perfilActivoAvatar.textContent = iconoDe(activo);
+    perfilActivoNombre.textContent = activo;
+  } else {
+    perfilActivoAvatar.textContent = "👤";
+    perfilActivoNombre.textContent = "Elegir perfil";
+  }
+}
+
+function seleccionarPerfil(nombre) {
+  localStorage.setItem(CLAVE_PERFIL, nombre);
+  pintarPerfilActivo();
+  perfilModalOverlay.hidden = true;
+}
+
+function abrirSelectorPerfil() {
+  perfilModalGrid.innerHTML = "";
+  MIEMBROS.forEach((m) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "perfil-modal__opcion";
+    btn.innerHTML = `<span class="avatar">${m.icono}</span><span class="nombre">${m.nombre}</span>`;
+    btn.addEventListener("click", () => seleccionarPerfil(m.nombre));
+    perfilModalGrid.appendChild(btn);
+  });
+  perfilModalOverlay.hidden = false;
+}
+
+perfilActivoBadge.addEventListener("click", abrirSelectorPerfil);
+
+pintarPerfilActivo();
+if (!obtenerPerfilActivo()) abrirSelectorPerfil();
 
 // ---------- MENÚ HAMBURGUESA ----------
 const hamburgerBtn = document.getElementById("hamburgerBtn");
@@ -262,6 +322,12 @@ form.addEventListener("submit", async (e) => {
     usuario_id: user.id,
   };
 
+  // El miembro solo se asigna al crear un gasto nuevo (el activo en ese momento).
+  // Al editar, se conserva el miembro original para no "cambiarle de dueño" el gasto.
+  if (!editando) {
+    gasto.miembro = obtenerPerfilActivo() || "Otro";
+  }
+
   if (editando) {
     const id = document.getElementById("gastoId").value;
     const { error } = await supabase.from("gastos").update(gasto).eq("id", id);
@@ -288,6 +354,66 @@ function resetForm() {
   document.getElementById("btnGuardar").textContent = "Guardar gasto";
 }
 
+// ---------- FILTRO Y PAGINACIÓN ----------
+const GASTOS_POR_PAGINA = 10;
+let todosLosGastos = [];
+let paginaActual = 1;
+
+const filtroMiembro = document.getElementById("filtroMiembro");
+filtroMiembro.addEventListener("change", () => {
+  paginaActual = 1;
+  renderizarListado();
+});
+
+function obtenerGastosFiltrados() {
+  const filtro = filtroMiembro.value;
+  if (filtro === "todos") return todosLosGastos;
+  return todosLosGastos.filter((g) => g.miembro === filtro);
+}
+
+function renderizarListado() {
+  const filtrados = obtenerGastosFiltrados();
+  const totalPaginas = Math.max(1, Math.ceil(filtrados.length / GASTOS_POR_PAGINA));
+  if (paginaActual > totalPaginas) paginaActual = totalPaginas;
+
+  const inicio = (paginaActual - 1) * GASTOS_POR_PAGINA;
+  const pagina = filtrados.slice(inicio, inicio + GASTOS_POR_PAGINA);
+
+  pintarTabla(pagina);
+  pintarPaginacion(filtrados.length, totalPaginas);
+}
+
+function pintarPaginacion(totalRegistros, totalPaginas) {
+  const cont = document.getElementById("paginacionGastos");
+  cont.innerHTML = "";
+
+  if (totalRegistros === 0) return;
+
+  const btnAnterior = document.createElement("button");
+  btnAnterior.textContent = "‹ Anterior";
+  btnAnterior.disabled = paginaActual === 1;
+  btnAnterior.addEventListener("click", () => {
+    paginaActual--;
+    renderizarListado();
+  });
+
+  const info = document.createElement("span");
+  info.className = "paginacion__info";
+  info.textContent = `Página ${paginaActual} de ${totalPaginas} · ${totalRegistros} gasto(s)`;
+
+  const btnSiguiente = document.createElement("button");
+  btnSiguiente.textContent = "Siguiente ›";
+  btnSiguiente.disabled = paginaActual === totalPaginas;
+  btnSiguiente.addEventListener("click", () => {
+    paginaActual++;
+    renderizarListado();
+  });
+
+  cont.appendChild(btnAnterior);
+  cont.appendChild(info);
+  cont.appendChild(btnSiguiente);
+}
+
 async function cargarGastos() {
   const { data, error } = await supabase
     .from("gastos")
@@ -299,20 +425,28 @@ async function cargarGastos() {
     return;
   }
 
-  pintarTabla(data);
+  todosLosGastos = data;
+  renderizarListado();
   pintarStats(data);
   pintarCategorias(data);
+  pintarMiembros(data);
 }
 
 function pintarTabla(gastos) {
   const tbody = document.getElementById("tablaGastosBody");
   tbody.innerHTML = "";
 
+  if (gastos.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--color-ink-light);padding:1.2rem;">Sin gastos para mostrar</td></tr>`;
+    return;
+  }
+
   gastos.forEach((g) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td data-label="Descripción">${g.descripcion}</td>
       <td data-label="Categoría">${g.categoria}</td>
+      <td data-label="Miembro">${iconoDe(g.miembro)} ${g.miembro || "-"}</td>
       <td data-label="Monto">Bs. ${Number(g.monto).toFixed(2)}</td>
       <td data-label="Fecha">${g.fecha}</td>
       <td data-label="Acciones">
@@ -406,6 +540,37 @@ function pintarCategorias(gastos) {
     bar.innerHTML = `
       <div class="categoria-bar__label">
         <span>${cat}</span>
+        <span>Bs. ${valor.toFixed(2)}</span>
+      </div>
+      <div class="categoria-bar__track">
+        <div class="categoria-bar__fill" style="width: ${porcentaje}%"></div>
+      </div>
+    `;
+    contenedor.appendChild(bar);
+  });
+}
+
+function pintarMiembros(gastos) {
+  const contenedor = document.getElementById("miembrosContainer");
+  contenedor.innerHTML = "";
+
+  const total = gastos.reduce((sum, g) => sum + Number(g.monto), 0);
+
+  const totalesPorMiembro = {};
+  MIEMBROS.forEach((m) => (totalesPorMiembro[m.nombre] = 0));
+  gastos.forEach((g) => {
+    const key = g.miembro || "Otro";
+    totalesPorMiembro[key] = (totalesPorMiembro[key] || 0) + Number(g.monto);
+  });
+
+  Object.entries(totalesPorMiembro).forEach(([nombre, valor]) => {
+    const porcentaje = total > 0 ? (valor / total) * 100 : 0;
+
+    const bar = document.createElement("div");
+    bar.className = "categoria-bar";
+    bar.innerHTML = `
+      <div class="categoria-bar__label">
+        <span>${iconoDe(nombre)} ${nombre}</span>
         <span>Bs. ${valor.toFixed(2)}</span>
       </div>
       <div class="categoria-bar__track">
