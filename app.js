@@ -360,9 +360,46 @@ let todosLosGastos = [];
 let paginaActual = 1;
 
 const filtroMiembro = document.getElementById("filtroMiembro");
-filtroMiembro.addEventListener("change", () => {
-  paginaActual = 1;
-  renderizarListado();
+const filtroMiembroDisplay = document.getElementById("filtroMiembroDisplay");
+const filtroMiembroPicker = document.getElementById("filtroMiembroPicker");
+const filtroMiembroPanel = document.getElementById("filtroMiembroPanel");
+
+const OPCIONES_FILTRO = ["todos", "Mamá", "Papá", "Hermano/a", "Yo", "Otro"];
+
+function etiquetaFiltro(valor) {
+  if (valor === "todos") return "Todos";
+  return `${iconoDe(valor)} ${valor}`;
+}
+
+function renderFiltroMiembroPanel() {
+  filtroMiembroPanel.innerHTML = "";
+  OPCIONES_FILTRO.forEach((valor) => {
+    const opt = document.createElement("button");
+    opt.type = "button";
+    opt.className = "select-picker__option";
+    if (valor === filtroMiembro.value) opt.classList.add("select-picker__option--selected");
+    opt.textContent = etiquetaFiltro(valor);
+    opt.addEventListener("click", () => {
+      filtroMiembro.value = valor;
+      filtroMiembroDisplay.textContent = etiquetaFiltro(valor);
+      filtroMiembroPanel.hidden = true;
+      paginaActual = 1;
+      renderizarListado();
+    });
+    filtroMiembroPanel.appendChild(opt);
+  });
+}
+
+filtroMiembroDisplay.textContent = "Todos";
+filtroMiembroDisplay.addEventListener("click", () => {
+  filtroMiembroPanel.hidden = !filtroMiembroPanel.hidden;
+  datePanel.hidden = true;
+  categoriaPanel.hidden = true;
+  if (!filtroMiembroPanel.hidden) renderFiltroMiembroPanel();
+});
+
+document.addEventListener("click", (e) => {
+  if (!filtroMiembroPicker.contains(e.target)) filtroMiembroPanel.hidden = true;
 });
 
 function obtenerGastosFiltrados() {
