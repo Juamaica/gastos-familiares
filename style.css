@@ -847,3 +847,9 @@ body {
   .lista-header__acciones { width: 100%; justify-content: space-between; }
   .perfil-modal__grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+.acciones-bloqueadas {
+  font-size: 0.78rem;
+  color: var(--color-ink-light);
+  font-style: italic;
+}
