@@ -721,6 +721,9 @@ body {
   z-index: 500;
   padding: 1.5rem;
 }
+.perfil-modal-overlay[hidden] {
+  display: none;
+}
 .perfil-modal {
   background: var(--color-surface);
   border-radius: var(--radius);
