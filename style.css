@@ -682,3 +682,167 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ================= PERFIL ACTIVO (badge en franja familiar) ================= */
+.perfil-activo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 0.35rem 0.8rem 0.35rem 0.4rem;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.perfil-activo:hover { border-color: var(--color-accent); }
+.perfil-activo__avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fdf8ec;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+}
+.perfil-activo__nombre {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* ================= MODAL SELECTOR DE PERFIL ================= */
+.perfil-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 38, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 1.5rem;
+}
+.perfil-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  border-top: 4px solid var(--color-accent);
+  padding: 2rem 1.8rem;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+}
+.perfil-modal h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 0.4rem;
+}
+.perfil-modal p {
+  font-size: 0.85rem;
+  color: var(--color-ink-light);
+  margin-bottom: 1.4rem;
+}
+.perfil-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+.perfil-modal__opcion {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.perfil-modal__opcion:hover {
+  border-color: var(--color-accent);
+  background: #fffefb;
+  transform: translateY(-2px);
+}
+.perfil-modal__opcion .avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fdf8ec;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+.perfil-modal__opcion span.nombre {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* ================= FILTRO POR MIEMBRO ================= */
+.lista-header__acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.filtro-miembro {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.filtro-miembro label {
+  font-size: 0.78rem;
+  color: var(--color-ink-light);
+}
+.filtro-miembro select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  background: #fffefb;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* ================= PAGINACIÓN ================= */
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+.paginacion button {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.paginacion button:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-bg);
+}
+.paginacion button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.paginacion button.activa {
+  background: var(--color-primary);
+  color: #fdf8ec;
+  border-color: var(--color-primary);
+}
+.paginacion__info {
+  font-size: 0.8rem;
+  color: var(--color-ink-light);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 768px) {
+  .familia-strip { flex-wrap: wrap; }
+  .lista-header__acciones { width: 100%; justify-content: space-between; }
+  .perfil-modal__grid { grid-template-columns: repeat(2, 1fr); }
+}
