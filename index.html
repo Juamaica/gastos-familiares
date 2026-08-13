@@ -37,9 +37,24 @@
         <img id="fotoFamiliar" src="" alt="Foto familiar" />
       </div>
       <h2 id="nombreFamilia" class="familia-strip__nombre">Mi Familia</h2>
+      <div class="perfil-activo" id="perfilActivoBadge">
+        <span class="perfil-activo__avatar" id="perfilActivoAvatar">👤</span>
+        <span class="perfil-activo__nombre" id="perfilActivoNombre">Elegir perfil</span>
+      </div>
       <label class="btn btn--secondary btn--small" for="inputFoto">Cambiar foto</label>
       <input type="file" id="inputFoto" accept="image/*" hidden />
     </section>
+
+    <!-- MODAL: SELECTOR DE PERFIL (estilo Netflix) -->
+    <div class="perfil-modal-overlay" id="perfilModalOverlay" hidden>
+      <div class="perfil-modal">
+        <h2>¿Quién eres?</h2>
+        <p>Elige tu perfil para registrar los gastos a tu nombre</p>
+        <div class="perfil-modal__grid" id="perfilModalGrid">
+          <!-- botones generados por JS -->
+        </div>
+      </div>
+    </div>
 
     <!-- DASHBOARD -->
     <section id="dashboard" class="dashboard">
@@ -71,6 +86,9 @@
         <div class="categorias-breakdown">
           <h3 class="section-subtitle">Gastos por categoría</h3>
           <div id="categoriasContainer"></div>
+
+          <h3 class="section-subtitle" style="margin-top:1.4rem;">Gastos por miembro de familia</h3>
+          <div id="miembrosContainer"></div>
         </div>
 
         <!-- FORMULARIO NUEVO GASTO (ficha) -->
@@ -139,9 +157,22 @@
     <section id="lista-gastos" class="lista-section">
       <div class="lista-header">
         <h2 class="section-title">Mis gastos</h2>
-        <button type="button" class="btn btn--ghost btn--small" id="btnRefrescar">
-          <span id="refrescarIcono">↻</span> Actualizar
-        </button>
+        <div class="lista-header__acciones">
+          <div class="filtro-miembro">
+            <label for="filtroMiembro">Ver gastos de:</label>
+            <select id="filtroMiembro">
+              <option value="todos">Todos</option>
+              <option value="Mamá">Mamá</option>
+              <option value="Papá">Papá</option>
+              <option value="Hermano/a">Hermano/a</option>
+              <option value="Yo">Yo</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn--ghost btn--small" id="btnRefrescar">
+            <span id="refrescarIcono">↻</span> Actualizar
+          </button>
+        </div>
       </div>
       <div class="tabla-wrapper">
         <table class="tabla-gastos">
@@ -149,6 +180,7 @@
             <tr>
               <th>Descripción</th>
               <th>Categoría</th>
+              <th>Miembro</th>
               <th>Monto</th>
               <th>Fecha</th>
               <th>Acciones</th>
@@ -159,6 +191,8 @@
           </tbody>
         </table>
       </div>
+
+      <div class="paginacion" id="paginacionGastos"></div>
     </section>
 
   </main>
