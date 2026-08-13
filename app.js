@@ -17,7 +17,6 @@ const MIEMBROS = [
   { nombre: "Papá", icono: "👨" },
   { nombre: "Hermano/a", icono: "🧒" },
   { nombre: "Yo", icono: "🙋" },
-  { nombre: "Otro", icono: "👤" },
 ];
 
 let familiaId = null;
@@ -364,7 +363,7 @@ const filtroMiembroDisplay = document.getElementById("filtroMiembroDisplay");
 const filtroMiembroPicker = document.getElementById("filtroMiembroPicker");
 const filtroMiembroPanel = document.getElementById("filtroMiembroPanel");
 
-const OPCIONES_FILTRO = ["todos", "Mamá", "Papá", "Hermano/a", "Yo", "Otro"];
+const OPCIONES_FILTRO = ["todos", "Mamá", "Papá", "Hermano/a", "Yo"];
 
 function etiquetaFiltro(valor) {
   if (valor === "todos") return "Todos";
