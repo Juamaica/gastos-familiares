@@ -858,6 +858,8 @@ body {
 .factura-print-header { display: none; }
 
 @media print {
+  body { font-size: 11px; }
+
   body * { visibility: hidden; }
 
   .lista-section, .lista-section * { visibility: visible; }
@@ -873,20 +875,20 @@ body {
 
   .factura-print-header {
     display: block;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.6rem;
   }
   .factura-print-header h1 {
     font-family: var(--font-display);
-    font-size: 1.6rem;
+    font-size: 1.1rem;
     color: var(--color-primary-dark);
   }
   .factura-print-header p {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     color: var(--color-ink-light);
-    margin-top: 0.2rem;
+    margin-top: 0.1rem;
   }
   .factura-print-header hr {
-    margin-top: 0.8rem;
+    margin-top: 0.5rem;
     border: none;
     border-top: 1px solid var(--color-border);
   }
@@ -900,5 +902,15 @@ body {
     display: none !important;
   }
 
-  .lista-header { margin-bottom: 0.6rem; }
+  .lista-header { margin-bottom: 0.4rem; }
+  .section-title { font-size: 1rem; margin-bottom: 0; }
+
+  .tabla-gastos th,
+  .tabla-gastos td {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.72rem;
+  }
+  .tabla-gastos th {
+    font-size: 0.6rem;
+  }
 }
