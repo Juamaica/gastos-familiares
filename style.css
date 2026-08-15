@@ -854,10 +854,16 @@ body {
   font-style: italic;
 }
 
-/* ================= FACTURA / IMPRIMIR ================= */
-.factura-print-header { display: none; }
+/* ================= FACTURA / IMPRIMIR (estilo tique angosto) ================= */
+.factura-print-header,
+.factura-ticket { display: none; }
 
 @media print {
+  @page {
+    size: 80mm auto;
+    margin: 4mm;
+  }
+
   body { font-size: 11px; }
 
   body * { visibility: hidden; }
@@ -873,44 +879,44 @@ body {
     padding: 0;
   }
 
-  .factura-print-header {
-    display: block;
-    margin-bottom: 0.6rem;
-  }
-  .factura-print-header h1 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    color: var(--color-primary-dark);
-  }
-  .factura-print-header p {
-    font-size: 0.72rem;
-    color: var(--color-ink-light);
-    margin-top: 0.1rem;
-  }
-  .factura-print-header hr {
-    margin-top: 0.5rem;
-    border: none;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .lista-header__acciones,
-  .paginacion,
-  .acciones,
-  .acciones-bloqueadas,
-  .tabla-gastos th:last-child,
-  .tabla-gastos td:last-child {
+  /* Se ocultan la tabla normal, el filtro, botones y paginación */
+  .lista-header,
+  .tabla-wrapper,
+  .paginacion {
     display: none !important;
   }
 
-  .lista-header { margin-bottom: 0.4rem; }
-  .section-title { font-size: 1rem; margin-bottom: 0; }
-
-  .tabla-gastos th,
-  .tabla-gastos td {
-    padding: 0.3rem 0.4rem;
-    font-size: 0.72rem;
+  .factura-print-header {
+    display: block;
+    text-align: center;
+    margin-bottom: 0.4rem;
   }
-  .tabla-gastos th {
-    font-size: 0.6rem;
+  .factura-print-header h1 {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    letter-spacing: 0.02em;
+  }
+  .factura-print-header p {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-ink);
+    margin-top: 0.1rem;
+  }
+  .factura-print-header hr {
+    margin-top: 0.4rem;
+    border: none;
+    border-top: 1px dashed var(--color-ink);
+  }
+
+  .factura-ticket {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--color-ink);
   }
 }
