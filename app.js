@@ -12,40 +12,66 @@ const CATEGORIAS = [
   "Otros",
 ];
 
-const MIEMBROS = [
-  { nombre: "Mamá", icono: "👩" },
-  { nombre: "Papá", icono: "👨" },
-  { nombre: "Hermano/a", icono: "🧒" },
-  { nombre: "Yo", icono: "🙋" },
-];
-
 let familiaId = null;
 let editando = false;
+let usuarioActualId = null;
+let miembrosFamilia = [];
 
-// ---------- PERFIL ACTIVO (estilo Netflix) ----------
+// ---------- PERFIL ACTIVO (estilo Netflix, editable) ----------
 const CLAVE_PERFIL = "gf_perfil_activo";
 const perfilModalOverlay = document.getElementById("perfilModalOverlay");
 const perfilModalGrid = document.getElementById("perfilModalGrid");
 const perfilActivoBadge = document.getElementById("perfilActivoBadge");
 const perfilActivoAvatar = document.getElementById("perfilActivoAvatar");
 const perfilActivoNombre = document.getElementById("perfilActivoNombre");
+const perfilVistaGrid = document.getElementById("perfilVistaGrid");
+const perfilVistaForm = document.getElementById("perfilVistaForm");
+const perfilFormTitulo = document.getElementById("perfilFormTitulo");
+const formPerfil = document.getElementById("formPerfil");
+const btnEliminarPerfil = document.getElementById("btnEliminarPerfil");
+const btnCancelarPerfil = document.getElementById("btnCancelarPerfil");
 
 function obtenerPerfilActivo() {
   return localStorage.getItem(CLAVE_PERFIL);
 }
 
+function obtenerPerfilPorNombre(nombre) {
+  return miembrosFamilia.find((m) => m.nombre === nombre) || null;
+}
+
+// Avatar visual (foto real, o inicial del nombre si no tiene foto)
+function avatarHTML(nombre) {
+  const m = obtenerPerfilPorNombre(nombre);
+  if (m && m.foto_url) return `<img src="${m.foto_url}" alt="${nombre}">`;
+  const inicial = nombre ? nombre.trim().charAt(0).toUpperCase() : "?";
+  return inicial;
+}
+
+// Ícono simple para contextos de texto plano (tabla, tique de impresión)
 function iconoDe(nombre) {
-  const m = MIEMBROS.find((x) => x.nombre === nombre);
-  return m ? m.icono : "👤";
+  return "👤";
+}
+
+async function cargarMiembrosFamilia() {
+  const { data, error } = await supabase
+    .from("miembros_familia")
+    .select("*")
+    .order("creado_en", { ascending: true });
+
+  if (error) {
+    console.error("Error cargando miembros de familia:", error.message);
+    return;
+  }
+  miembrosFamilia = data || [];
 }
 
 function pintarPerfilActivo() {
   const activo = obtenerPerfilActivo();
-  if (activo) {
-    perfilActivoAvatar.textContent = iconoDe(activo);
+  if (activo && obtenerPerfilPorNombre(activo)) {
+    perfilActivoAvatar.innerHTML = avatarHTML(activo);
     perfilActivoNombre.textContent = activo;
   } else {
-    perfilActivoAvatar.textContent = "👤";
+    perfilActivoAvatar.innerHTML = "👤";
     perfilActivoNombre.textContent = "Elegir perfil";
   }
 }
@@ -56,23 +82,134 @@ function seleccionarPerfil(nombre) {
   perfilModalOverlay.hidden = true;
 }
 
-function abrirSelectorPerfil() {
+function mostrarVistaGrid() {
+  perfilVistaForm.hidden = true;
+  perfilVistaGrid.hidden = false;
+  renderGridPerfiles();
+}
+
+function mostrarVistaForm(perfil = null) {
+  formPerfil.reset();
+  document.getElementById("perfilIdEdit").value = perfil ? perfil.id : "";
+  perfilFormTitulo.textContent = perfil ? "Editar perfil" : "Nuevo perfil";
+  document.getElementById("perfilNombre").value = perfil ? perfil.nombre : "";
+  btnEliminarPerfil.hidden = !perfil;
+  perfilVistaGrid.hidden = true;
+  perfilVistaForm.hidden = false;
+}
+
+function renderGridPerfiles() {
   perfilModalGrid.innerHTML = "";
-  MIEMBROS.forEach((m) => {
+
+  miembrosFamilia.forEach((m) => {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "perfil-modal__opcion";
-    btn.innerHTML = `<span class="avatar">${m.icono}</span><span class="nombre">${m.nombre}</span>`;
+    btn.innerHTML = `
+      <span class="avatar">${avatarHTML(m.nombre)}</span>
+      <span class="nombre">${m.nombre}</span>
+      <span class="perfil-modal__editar" title="Editar">✏️</span>
+    `;
     btn.addEventListener("click", () => seleccionarPerfil(m.nombre));
+    btn.querySelector(".perfil-modal__editar").addEventListener("click", (e) => {
+      e.stopPropagation();
+      mostrarVistaForm(m);
+    });
     perfilModalGrid.appendChild(btn);
   });
+
+  const btnAgregar = document.createElement("button");
+  btnAgregar.type = "button";
+  btnAgregar.className = "perfil-modal__opcion perfil-modal__opcion--agregar";
+  btnAgregar.innerHTML = `<span class="avatar">+</span><span class="nombre">Agregar</span>`;
+  btnAgregar.addEventListener("click", () => mostrarVistaForm(null));
+  perfilModalGrid.appendChild(btnAgregar);
+}
+
+function abrirSelectorPerfil() {
+  mostrarVistaGrid();
   perfilModalOverlay.hidden = false;
 }
 
 perfilActivoBadge.addEventListener("click", abrirSelectorPerfil);
+btnCancelarPerfil.addEventListener("click", mostrarVistaGrid);
 
-pintarPerfilActivo();
-if (!obtenerPerfilActivo()) abrirSelectorPerfil();
+formPerfil.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("perfilIdEdit").value;
+  const nombre = document.getElementById("perfilNombre").value.trim();
+  const archivo = document.getElementById("perfilFoto").files[0];
+  const btnGuardar = formPerfil.querySelector('button[type="submit"]');
+  btnGuardar.disabled = true;
+
+  try {
+    let perfilId = id;
+
+    if (id) {
+      // Editar perfil existente
+      const { error } = await supabase.from("miembros_familia").update({ nombre }).eq("id", id);
+      if (error) throw error;
+    } else {
+      // Crear perfil nuevo
+      const { data, error } = await supabase
+        .from("miembros_familia")
+        .insert([{ usuario_id: usuarioActualId, nombre }])
+        .select();
+      if (error) throw error;
+      perfilId = data[0].id;
+    }
+
+    if (archivo) {
+      const nombreArchivo = `miembro_${perfilId}_${Date.now()}.${archivo.name.split(".").pop()}`;
+      const { error: uploadError } = await supabase.storage
+        .from("fotos-familia")
+        .upload(nombreArchivo, archivo, { upsert: true });
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrlData } = supabase.storage.from("fotos-familia").getPublicUrl(nombreArchivo);
+      const { error: updateError } = await supabase
+        .from("miembros_familia")
+        .update({ foto_url: publicUrlData.publicUrl })
+        .eq("id", perfilId);
+      if (updateError) throw updateError;
+    }
+
+    const nombreOriginalSiEditaba = id ? miembrosFamilia.find((m) => m.id === id)?.nombre : null;
+    await cargarMiembrosFamilia();
+
+    // Si edité el perfil que tenía activo y le cambié el nombre, actualizo el activo también
+    if (id && nombreOriginalSiEditaba && obtenerPerfilActivo() === nombreOriginalSiEditaba) {
+      localStorage.setItem(CLAVE_PERFIL, nombre);
+    }
+
+    pintarPerfilActivo();
+    mostrarToast(id ? "Perfil actualizado" : "Perfil creado", "exito");
+    mostrarVistaGrid();
+  } catch (err) {
+    mostrarToast("Error al guardar el perfil: " + err.message, "error");
+  } finally {
+    btnGuardar.disabled = false;
+  }
+});
+
+btnEliminarPerfil.addEventListener("click", async () => {
+  const id = document.getElementById("perfilIdEdit").value;
+  if (!id) return;
+  if (!confirm("¿Seguro que quieres eliminar este perfil? Los gastos que ya registró quedan igual, pero ya no podrá elegir este perfil de nuevo.")) return;
+
+  const perfil = miembrosFamilia.find((m) => m.id === id);
+  const { error } = await supabase.from("miembros_familia").delete().eq("id", id);
+  if (error) return mostrarToast("Error al eliminar: " + error.message, "error");
+
+  if (perfil && obtenerPerfilActivo() === perfil.nombre) {
+    localStorage.removeItem(CLAVE_PERFIL);
+  }
+
+  await cargarMiembrosFamilia();
+  pintarPerfilActivo();
+  mostrarToast("Perfil eliminado", "exito");
+  mostrarVistaGrid();
+});
 
 // ---------- MENÚ HAMBURGUESA ----------
 const hamburgerBtn = document.getElementById("hamburgerBtn");
@@ -375,7 +512,7 @@ form.addEventListener("submit", async (e) => {
   // El miembro solo se asigna al crear un gasto nuevo (el activo en ese momento).
   // Al editar, se conserva el miembro original para no "cambiarle de dueño" el gasto.
   if (!editando) {
-    gasto.miembro = obtenerPerfilActivo() || "Otro";
+    gasto.miembro = obtenerPerfilActivo() || "Sin asignar";
   }
 
   if (editando) {
@@ -414,8 +551,6 @@ const filtroMiembroDisplay = document.getElementById("filtroMiembroDisplay");
 const filtroMiembroPicker = document.getElementById("filtroMiembroPicker");
 const filtroMiembroPanel = document.getElementById("filtroMiembroPanel");
 
-const OPCIONES_FILTRO = ["todos", "Mamá", "Papá", "Hermano/a", "Yo"];
-
 function etiquetaFiltro(valor) {
   if (valor === "todos") return "Todos";
   return `${iconoDe(valor)} ${valor}`;
@@ -423,7 +558,8 @@ function etiquetaFiltro(valor) {
 
 function renderFiltroMiembroPanel() {
   filtroMiembroPanel.innerHTML = "";
-  OPCIONES_FILTRO.forEach((valor) => {
+  const opciones = ["todos", ...miembrosFamilia.map((m) => m.nombre)];
+  opciones.forEach((valor) => {
     const opt = document.createElement("button");
     opt.type = "button";
     opt.className = "select-picker__option";
@@ -656,9 +792,9 @@ function pintarMiembros(gastos) {
   const total = gastos.reduce((sum, g) => sum + Number(g.monto), 0);
 
   const totalesPorMiembro = {};
-  MIEMBROS.forEach((m) => (totalesPorMiembro[m.nombre] = 0));
+  miembrosFamilia.forEach((m) => (totalesPorMiembro[m.nombre] = 0));
   gastos.forEach((g) => {
-    const key = g.miembro || "Otro";
+    const key = g.miembro || "Sin asignar";
     totalesPorMiembro[key] = (totalesPorMiembro[key] || 0) + Number(g.monto);
   });
 
@@ -685,3 +821,17 @@ setFecha(new Date());
 setCategoria(CATEGORIAS[0]);
 cargarFamilia();
 cargarGastos();
+
+(async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  usuarioActualId = user?.id || null;
+
+  await cargarMiembrosFamilia();
+  pintarPerfilActivo();
+
+  const activo = obtenerPerfilActivo();
+  const activoValido = activo && obtenerPerfilPorNombre(activo);
+  if (!activoValido) {
+    abrirSelectorPerfil();
+  }
+})();
