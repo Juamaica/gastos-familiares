@@ -304,6 +304,31 @@ btnRefrescar.addEventListener("click", async () => {
   btnRefrescar.disabled = false;
 });
 
+// ---------- IMPRIMIR / DESCARGAR (como factura) ----------
+const btnImprimir = document.getElementById("btnImprimir");
+btnImprimir.addEventListener("click", () => window.print());
+
+window.addEventListener("beforeprint", () => {
+  // Mostrar TODOS los gastos filtrados (no solo la página actual)
+  const filtrados = obtenerGastosFiltrados();
+  pintarTabla(filtrados);
+
+  const nombreFamilia = document.getElementById("nombreFamilia").textContent;
+  const totalFiltrado = filtrados.reduce((sum, g) => sum + Number(g.monto), 0);
+  const filtroTexto = filtroMiembro.value === "todos" ? "Todos los miembros" : filtroMiembro.value;
+
+  document.getElementById("facturaFamilia").textContent = `Familia: ${nombreFamilia} · Miembro: ${filtroTexto}`;
+  document.getElementById("facturaFecha").textContent =
+    `Generado el ${new Date().toLocaleDateString("es-BO", { day: "2-digit", month: "long", year: "numeric" })}`;
+  document.getElementById("facturaTotal").textContent =
+    `Total: Bs. ${totalFiltrado.toFixed(2)} (${filtrados.length} gasto(s))`;
+});
+
+window.addEventListener("afterprint", () => {
+  // Volver a la vista normal con paginación
+  renderizarListado();
+});
+
 // ---------- CRUD GASTOS ----------
 const form = document.getElementById("formGasto");
 const btnCancelar = document.getElementById("btnCancelar");
