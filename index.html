@@ -155,6 +155,16 @@
 
     <!-- LISTA DE GASTOS -->
     <section id="lista-gastos" class="lista-section">
+
+      <!-- Este bloque solo se ve al imprimir/descargar -->
+      <div class="factura-print-header">
+        <h1>💰 Gastos Familiares</h1>
+        <p id="facturaFamilia"></p>
+        <p id="facturaFecha"></p>
+        <p id="facturaTotal"></p>
+        <hr>
+      </div>
+
       <div class="lista-header">
         <h2 class="section-title">Mis gastos</h2>
         <div class="lista-header__acciones">
@@ -172,6 +182,7 @@
               <div class="select-picker__panel" id="filtroMiembroPanel" hidden></div>
             </div>
           </div>
+          <button type="button" class="btn btn--ghost btn--small" id="btnImprimir">🖨️ Descargar / Imprimir</button>
           <button type="button" class="btn btn--ghost btn--small" id="btnRefrescar">
             <span id="refrescarIcono">↻</span> Actualizar
           </button>
