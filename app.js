@@ -309,19 +309,45 @@ const btnImprimir = document.getElementById("btnImprimir");
 btnImprimir.addEventListener("click", () => window.print());
 
 window.addEventListener("beforeprint", () => {
-  // Mostrar TODOS los gastos filtrados (no solo la página actual)
   const filtrados = obtenerGastosFiltrados();
-  pintarTabla(filtrados);
+  const ANCHO = 32; // caracteres de ancho, como un tique térmico real
+
+  function lineaDinero(izquierda, derecha) {
+    const espacio = Math.max(1, ANCHO - izquierda.length - derecha.length);
+    return izquierda + " ".repeat(espacio) + derecha;
+  }
+
+  function linea(caracter = "-") {
+    return caracter.repeat(ANCHO);
+  }
 
   const nombreFamilia = document.getElementById("nombreFamilia").textContent;
-  const totalFiltrado = filtrados.reduce((sum, g) => sum + Number(g.monto), 0);
-  const filtroTexto = filtroMiembro.value === "todos" ? "Todos los miembros" : filtroMiembro.value;
+  const filtroTexto = filtroMiembro.value === "todos" ? "Todos" : filtroMiembro.value;
+  const total = filtrados.reduce((sum, g) => sum + Number(g.monto), 0);
 
-  document.getElementById("facturaFamilia").textContent = `Familia: ${nombreFamilia} · Miembro: ${filtroTexto}`;
+  document.getElementById("facturaFamilia").textContent = `Familia: ${nombreFamilia} · ${filtroTexto}`;
   document.getElementById("facturaFecha").textContent =
-    `Generado el ${new Date().toLocaleDateString("es-BO", { day: "2-digit", month: "long", year: "numeric" })}`;
-  document.getElementById("facturaTotal").textContent =
-    `Total: Bs. ${totalFiltrado.toFixed(2)} (${filtrados.length} gasto(s))`;
+    new Date().toLocaleDateString("es-BO", { day: "2-digit", month: "2-digit", year: "numeric" });
+
+  let ticket = linea() + "\n";
+
+  if (filtrados.length === 0) {
+    ticket += "   Sin gastos registrados\n";
+  } else {
+    filtrados.forEach((g) => {
+      ticket += `${g.descripcion}\n`;
+      ticket += `  ${iconoDe(g.miembro)} ${g.miembro || "-"} · ${g.categoria}\n`;
+      ticket += lineaDinero(`  ${g.fecha}`, `Bs. ${Number(g.monto).toFixed(2)}`) + "\n";
+      ticket += linea() + "\n";
+    });
+  }
+
+  ticket += lineaDinero("TOTAL:", `Bs. ${total.toFixed(2)}`) + "\n";
+  ticket += `${filtrados.length} gasto(s)\n`;
+  ticket += linea("=") + "\n";
+  ticket += "\n     ¡Gracias por registrar!\n";
+
+  document.getElementById("facturaTicket").textContent = ticket;
 });
 
 window.addEventListener("afterprint", () => {
