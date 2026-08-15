@@ -853,3 +853,52 @@ body {
   color: var(--color-ink-light);
   font-style: italic;
 }
+
+/* ================= FACTURA / IMPRIMIR ================= */
+.factura-print-header { display: none; }
+
+@media print {
+  body * { visibility: hidden; }
+
+  .lista-section, .lista-section * { visibility: visible; }
+
+  .lista-section {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+
+  .factura-print-header {
+    display: block;
+    margin-bottom: 1.2rem;
+  }
+  .factura-print-header h1 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--color-primary-dark);
+  }
+  .factura-print-header p {
+    font-size: 0.85rem;
+    color: var(--color-ink-light);
+    margin-top: 0.2rem;
+  }
+  .factura-print-header hr {
+    margin-top: 0.8rem;
+    border: none;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .lista-header__acciones,
+  .paginacion,
+  .acciones,
+  .acciones-bloqueadas,
+  .tabla-gastos th:last-child,
+  .tabla-gastos td:last-child {
+    display: none !important;
+  }
+
+  .lista-header { margin-bottom: 0.6rem; }
+}
