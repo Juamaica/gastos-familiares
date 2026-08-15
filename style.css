@@ -28,6 +28,18 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Fuerza a que cualquier elemento con el atributo hidden se oculte SIEMPRE,
+   sin importar si tiene clases como .btn que definen su propio "display".
+   Sin esto, botones ocultos por JS (ej: btnEliminarPerfil.hidden = true)
+   podían seguir mostrándose. */
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--color-bg);
@@ -333,6 +345,18 @@ body {
   font-size: 0.95rem;
   background: #fffefb;
   color: var(--color-ink);
+  width: 100%;
+  min-width: 0;
+}
+
+/* El input de tipo archivo ("Seleccionar archivo") dibuja su propio botón +
+   texto con un ancho mínimo que en móvil se salía del modal. Se fuerza a
+   respetar el ancho del contenedor y a recortar el texto si no cabe. */
+.form-group input[type="file"] {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .form-group input:focus,
@@ -739,6 +763,7 @@ body {
   width: 100%;
   text-align: center;
   box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  overflow-x: hidden;
 }
 .perfil-modal h2 {
   font-family: var(--font-display);
