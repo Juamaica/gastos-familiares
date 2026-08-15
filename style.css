@@ -703,6 +703,12 @@ body {
   color: #fdf8ec;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.85rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  overflow: hidden;
+}
+.perfil-activo__avatar img {
+  width: 100%; height: 100%; object-fit: cover;
 }
 .perfil-activo__nombre {
   font-size: 0.82rem;
@@ -751,6 +757,7 @@ body {
   gap: 0.8rem;
 }
 .perfil-modal__opcion {
+  position: relative;
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -770,13 +777,42 @@ body {
   background: var(--color-primary);
   color: #fdf8ec;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  overflow: hidden;
+}
+.perfil-modal__opcion .avatar img {
+  width: 100%; height: 100%; object-fit: cover;
 }
 .perfil-modal__opcion span.nombre {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-ink);
+  text-align: center;
 }
+.perfil-modal__opcion--agregar {
+  background: transparent;
+  border-style: dashed;
+}
+.perfil-modal__opcion--agregar .avatar {
+  background: transparent;
+  border: 2px dashed var(--color-border);
+  color: var(--color-ink-light);
+  font-size: 1.4rem;
+}
+.perfil-modal__editar {
+  position: absolute;
+  top: 4px; right: 4px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  cursor: pointer;
+}
+.perfil-modal__editar:hover { background: var(--color-bg); }
 
 /* ================= FILTRO POR MIEMBRO ================= */
 .lista-header__acciones {
