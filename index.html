@@ -185,12 +185,37 @@
 
       <!-- Este bloque solo se ve al imprimir/descargar -->
       <div class="factura-print-header">
-        <h1>💰 Gastos Familiares</h1>
-        <p id="facturaFamilia"></p>
-        <p id="facturaFecha"></p>
-        <hr>
+        <div class="factura-print-header__marca">
+          <h1>💰 Gastos Familiares</h1>
+          <p class="factura-print-header__subtitulo">Reporte de gastos</p>
+        </div>
+        <div class="factura-print-header__datos">
+          <p><strong>Familia:</strong> <span id="facturaFamilia"></span></p>
+          <p><strong>Fecha de emisión:</strong> <span id="facturaFecha"></span></p>
+          <p><strong>N° de registros:</strong> <span id="facturaCantidad"></span></p>
+        </div>
       </div>
-      <pre class="factura-ticket" id="facturaTicket"></pre>
+
+      <table class="factura-tabla">
+        <thead>
+          <tr>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Miembro</th>
+            <th>Fecha</th>
+            <th class="factura-tabla__monto">Monto</th>
+          </tr>
+        </thead>
+        <tbody id="facturaTablaBody"></tbody>
+        <tfoot>
+          <tr class="factura-tabla__total">
+            <td colspan="4">TOTAL</td>
+            <td class="factura-tabla__monto" id="facturaTotal">Bs. 0.00</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p class="factura-print-footer">¡Gracias por registrar tus gastos!</p>
 
       <div class="lista-header">
         <h2 class="section-title">Mis gastos</h2>
