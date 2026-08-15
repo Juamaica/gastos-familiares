@@ -890,17 +890,18 @@ body {
   font-style: italic;
 }
 
-/* ================= FACTURA / IMPRIMIR (estilo tique angosto) ================= */
+/* ================= FACTURA / IMPRIMIR (estilo factura profesional A4) ================= */
 .factura-print-header,
-.factura-ticket { display: none; }
+.factura-tabla,
+.factura-print-footer { display: none; }
 
 @media print {
   @page {
-    size: 80mm auto;
-    margin: 4mm;
+    size: A4 portrait;
+    margin: 16mm 14mm;
   }
 
-  body { font-size: 11px; }
+  body { font-size: 12px; color: #1a1a1a; }
 
   body * { visibility: hidden; }
 
@@ -915,44 +916,96 @@ body {
     padding: 0;
   }
 
-  /* Se ocultan la tabla normal, el filtro, botones y paginación */
+  /* Se ocultan la vista normal: header de lista, tabla en pantalla, filtro, botones, paginación */
   .lista-header,
   .tabla-wrapper,
   .paginacion {
     display: none !important;
   }
 
+  /* ---- Encabezado tipo factura ---- */
   .factura-print-header {
-    display: block;
-    text-align: center;
-    margin-bottom: 0.4rem;
-  }
-  .factura-print-header h1 {
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--color-ink);
-    letter-spacing: 0.02em;
-  }
-  .factura-print-header p {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--color-ink);
-    margin-top: 0.1rem;
-  }
-  .factura-print-header hr {
-    margin-top: 0.4rem;
-    border: none;
-    border-top: 1px dashed var(--color-ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px solid #1f3d2e;
+    padding-bottom: 10px;
+    margin-bottom: 18px;
   }
 
-  .factura-ticket {
-    display: block;
-    font-family: var(--font-mono);
+  .factura-print-header__marca h1 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1f3d2e;
+  }
+
+  .factura-print-header__subtitulo {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b6255;
+    margin-top: 2px;
+  }
+
+  .factura-print-header__datos {
+    text-align: right;
+    font-size: 0.78rem;
+    line-height: 1.6;
+  }
+
+  .factura-print-header__datos strong {
+    color: #1a1a1a;
+  }
+
+  /* ---- Tabla de la factura ---- */
+  .factura-tabla {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+
+  .factura-tabla thead th {
+    background: #1f3d2e;
+    color: #fdf8ec;
+    text-align: left;
+    padding: 8px 10px;
     font-size: 0.68rem;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
-    color: var(--color-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .factura-tabla tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #e3d9c4;
+  }
+
+  .factura-tabla tbody tr:nth-child(even) {
+    background: #f5efe3;
+  }
+
+  .factura-tabla__monto {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .factura-tabla tfoot .factura-tabla__total td {
+    border-top: 2px solid #1f3d2e;
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding-top: 10px;
+    color: #1f3d2e;
+  }
+
+  .factura-print-footer {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.75rem;
+    color: #6b6255;
+    font-style: italic;
   }
 }
