@@ -48,11 +48,38 @@
     <!-- MODAL: SELECTOR DE PERFIL (estilo Netflix) -->
     <div class="perfil-modal-overlay" id="perfilModalOverlay" hidden>
       <div class="perfil-modal">
-        <h2>¿Quién eres?</h2>
-        <p>Elige tu perfil para registrar los gastos a tu nombre</p>
-        <div class="perfil-modal__grid" id="perfilModalGrid">
-          <!-- botones generados por JS -->
+
+        <!-- Vista: cuadrícula de perfiles -->
+        <div id="perfilVistaGrid">
+          <h2>¿Quién eres?</h2>
+          <p>Elige tu perfil, o agrega uno nuevo</p>
+          <div class="perfil-modal__grid" id="perfilModalGrid">
+            <!-- botones generados por JS -->
+          </div>
         </div>
+
+        <!-- Vista: agregar / editar perfil -->
+        <div id="perfilVistaForm" hidden>
+          <h2 id="perfilFormTitulo">Nuevo perfil</h2>
+          <p>Ponle un nombre y, si quieres, una foto</p>
+          <form id="formPerfil" class="form-gasto" style="text-align:left;">
+            <input type="hidden" id="perfilIdEdit" />
+            <div class="form-group">
+              <label for="perfilNombre">Nombre</label>
+              <input type="text" id="perfilNombre" required placeholder="Ej: Abuela, Kevin..." />
+            </div>
+            <div class="form-group">
+              <label for="perfilFoto">Foto (opcional)</label>
+              <input type="file" id="perfilFoto" accept="image/*" />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Guardar perfil</button>
+              <button type="button" class="btn btn--delete" id="btnEliminarPerfil" hidden>Eliminar perfil</button>
+              <button type="button" class="btn btn--ghost" id="btnCancelarPerfil">‹ Volver</button>
+            </div>
+          </form>
+        </div>
+
       </div>
     </div>
 
