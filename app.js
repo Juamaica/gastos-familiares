@@ -448,7 +448,7 @@ btnImprimir.addEventListener("click", () => window.print());
 window.addEventListener("beforeprint", () => {
   const filtrados = obtenerGastosFiltrados();
   const nombreFamilia = document.getElementById("nombreFamilia").textContent;
-  const filtroTexto = filtroMiembro.value === "todos" ? "Todos" : filtroMiembro.value;
+  const filtroTexto = filtroMiembroActual === "todos" ? "Todos" : filtroMiembroActual;
   const total = filtrados.reduce((sum, g) => sum + Number(g.monto), 0);
 
   document.getElementById("facturaFamilia").textContent = `${nombreFamilia} · ${filtroTexto}`;
@@ -540,10 +540,13 @@ const GASTOS_POR_PAGINA = 10;
 let todosLosGastos = [];
 let paginaActual = 1;
 
-const filtroMiembro = document.getElementById("filtroMiembro");
 const filtroMiembroDisplay = document.getElementById("filtroMiembroDisplay");
 const filtroMiembroPicker = document.getElementById("filtroMiembroPicker");
 const filtroMiembroPanel = document.getElementById("filtroMiembroPanel");
+
+// Variable normal de JS (ya NO dependemos del <select> oculto, que tenía
+// opciones fijas como "Mamá"/"Papá" y no reconocía nombres reales como "Ulices").
+let filtroMiembroActual = "todos";
 
 function etiquetaFiltro(valor) {
   if (valor === "todos") return "Todos";
@@ -557,10 +560,10 @@ function renderFiltroMiembroPanel() {
     const opt = document.createElement("button");
     opt.type = "button";
     opt.className = "select-picker__option";
-    if (valor === filtroMiembro.value) opt.classList.add("select-picker__option--selected");
+    if (valor === filtroMiembroActual) opt.classList.add("select-picker__option--selected");
     opt.textContent = etiquetaFiltro(valor);
     opt.addEventListener("click", () => {
-      filtroMiembro.value = valor;
+      filtroMiembroActual = valor;
       filtroMiembroDisplay.textContent = etiquetaFiltro(valor);
       filtroMiembroPanel.hidden = true;
       paginaActual = 1;
@@ -583,9 +586,8 @@ document.addEventListener("click", (e) => {
 });
 
 function obtenerGastosFiltrados() {
-  const filtro = filtroMiembro.value;
-  if (filtro === "todos") return todosLosGastos;
-  return todosLosGastos.filter((g) => g.miembro === filtro);
+  if (filtroMiembroActual === "todos") return todosLosGastos;
+  return todosLosGastos.filter((g) => g.miembro === filtroMiembroActual);
 }
 
 function renderizarListado() {
