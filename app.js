@@ -47,7 +47,7 @@ function avatarHTML(nombre) {
   return inicial;
 }
 
-// Ícono simple para contextos de texto plano (tabla, tique de impresión)
+// Ícono simple para contextos de texto plano (tabla)
 function iconoDe(nombre) {
   return "👤";
 }
@@ -441,50 +441,44 @@ btnRefrescar.addEventListener("click", async () => {
   btnRefrescar.disabled = false;
 });
 
-// ---------- IMPRIMIR / DESCARGAR (como factura) ----------
+// ---------- IMPRIMIR / DESCARGAR (como factura profesional) ----------
 const btnImprimir = document.getElementById("btnImprimir");
 btnImprimir.addEventListener("click", () => window.print());
 
 window.addEventListener("beforeprint", () => {
   const filtrados = obtenerGastosFiltrados();
-  const ANCHO = 32; // caracteres de ancho, como un tique térmico real
-
-  function lineaDinero(izquierda, derecha) {
-    const espacio = Math.max(1, ANCHO - izquierda.length - derecha.length);
-    return izquierda + " ".repeat(espacio) + derecha;
-  }
-
-  function linea(caracter = "-") {
-    return caracter.repeat(ANCHO);
-  }
-
   const nombreFamilia = document.getElementById("nombreFamilia").textContent;
   const filtroTexto = filtroMiembro.value === "todos" ? "Todos" : filtroMiembro.value;
   const total = filtrados.reduce((sum, g) => sum + Number(g.monto), 0);
 
-  document.getElementById("facturaFamilia").textContent = `Familia: ${nombreFamilia} · ${filtroTexto}`;
-  document.getElementById("facturaFecha").textContent =
-    new Date().toLocaleDateString("es-BO", { day: "2-digit", month: "2-digit", year: "numeric" });
+  document.getElementById("facturaFamilia").textContent = `${nombreFamilia} · ${filtroTexto}`;
+  document.getElementById("facturaFecha").textContent = new Date().toLocaleDateString("es-BO", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  document.getElementById("facturaCantidad").textContent = filtrados.length;
 
-  let ticket = linea() + "\n";
+  const tbody = document.getElementById("facturaTablaBody");
+  tbody.innerHTML = "";
 
   if (filtrados.length === 0) {
-    ticket += "   Sin gastos registrados\n";
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Sin gastos registrados</td></tr>`;
   } else {
     filtrados.forEach((g) => {
-      ticket += `${g.descripcion}\n`;
-      ticket += `  ${iconoDe(g.miembro)} ${g.miembro || "-"} · ${g.categoria}\n`;
-      ticket += lineaDinero(`  ${g.fecha}`, `Bs. ${Number(g.monto).toFixed(2)}`) + "\n";
-      ticket += linea() + "\n";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${g.descripcion}</td>
+        <td>${g.categoria}</td>
+        <td>${g.miembro || "-"}</td>
+        <td>${g.fecha}</td>
+        <td class="factura-tabla__monto">Bs. ${Number(g.monto).toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
     });
   }
 
-  ticket += lineaDinero("TOTAL:", `Bs. ${total.toFixed(2)}`) + "\n";
-  ticket += `${filtrados.length} gasto(s)\n`;
-  ticket += linea("=") + "\n";
-  ticket += "\n     ¡Gracias por registrar!\n";
-
-  document.getElementById("facturaTicket").textContent = ticket;
+  document.getElementById("facturaTotal").textContent = `Bs. ${total.toFixed(2)}`;
 });
 
 window.addEventListener("afterprint", () => {
