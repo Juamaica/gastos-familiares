@@ -1,52 +1,68 @@
-/* ================= FUENTES =================
-   Agregar en el <head> del HTML, antes de este archivo:
+/* =========================================================
+   GASTOS FAMILIARES — Sistema de diseño
+   Paleta: índigo de noche + dorado mostaza + turquesa
+   Inspiración suelta: la libreta de cuentas familiar y las
+   franjas de color de los tejidos andinos, como firma visual.
+   ========================================================= */
 
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ================= VARIABLES ================= */
 :root {
-  --color-bg: #f5efe3;
-  --color-surface: #fffdf8;
-  --color-primary: #1f3d2e;
-  --color-primary-dark: #14291f;
-  --color-accent: #c08a28;
-  --color-ink: #2b2620;
-  --color-ink-light: #6b6255;
-  --color-border: #e3d9c4;
-  --color-expense: #a63d2f;
-  --color-success: #4f7a5a;
-  --font-display: "Fraunces", Georgia, serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", "Courier New", monospace;
-  --radius: 8px;
-  --shadow: 0 3px 10px rgba(43, 38, 32, 0.08);
+  --color-bg: #f5f4fa;
+  --color-surface: #ffffff;
+
+  --color-primary: #4c3a9e;
+  --color-primary-dark: #2f2266;
+  --color-secondary: #e0a72e;
+  --color-teal: #1f9e93;
+
+  --color-text: #241c3d;
+  --color-text-light: #6e6690;
+
+  --color-border: #e6e3f2;
+  --color-danger: #d64545;
+  --color-success: #1f9e93;
+
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 10px 30px -14px rgba(47, 34, 102, 0.22);
+  --shadow-sm: 0 2px 8px rgba(47, 34, 102, 0.08);
   --transition: 0.2s ease;
+
+  --stripe: linear-gradient(
+    90deg,
+    var(--color-primary) 0%, var(--color-primary) 25%,
+    var(--color-secondary) 25%, var(--color-secondary) 50%,
+    var(--color-teal) 50%, var(--color-teal) 75%,
+    var(--color-danger) 75%, var(--color-danger) 100%
+  );
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Fuerza a que cualquier elemento con el atributo hidden se oculte SIEMPRE,
-   sin importar si tiene clases como .btn que definen su propio "display".
-   Sin esto, botones ocultos por JS (ej: btnEliminarPerfil.hidden = true)
-   podían seguir mostrándose. */
-[hidden] {
-  display: none !important;
-}
-
-html, body {
-  overflow-x: hidden;
-}
-
 body {
   font-family: var(--font-body);
   background: var(--color-bg);
-  background-image: linear-gradient(var(--color-border) 1px, transparent 1px);
-  background-size: 100% 2.2rem;
-  color: var(--color-ink);
-  line-height: 1.5;
+  color: var(--color-text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .section-title {
@@ -61,9 +77,9 @@ body {
 .section-subtitle {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   margin-bottom: 0.8rem;
-  color: var(--color-ink);
+  color: var(--color-primary-dark);
 }
 
 /* ================= HEADER ================= */
@@ -71,42 +87,62 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-primary);
-  padding: 0.85rem 1.5rem;
-  box-shadow: var(--shadow);
+  background: var(--color-surface);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
+  border-bottom: 3px solid transparent;
+  border-image: var(--stripe) 1;
 }
 
 .header__logo {
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fdf8ec;
-  letter-spacing: 0.01em;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
 }
 
 .nav {
   display: flex;
+  align-items: center;
   gap: 1.5rem;
 }
 
 .nav__link {
   text-decoration: none;
-  color: #e8e0cd;
-  font-weight: 500;
+  color: var(--color-text-light);
+  font-weight: 600;
   font-size: 0.92rem;
-  padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
   transition: color var(--transition), border-color var(--transition);
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.nav__link:hover {
-  color: var(--color-accent);
-  border-bottom-color: var(--color-accent);
+.nav__link:hover,
+.nav__link.active {
+  color: var(--color-primary);
+  border-color: var(--color-secondary);
 }
 
+.nav__link--logout {
+  color: var(--color-danger);
+}
+
+.nav__link--logout:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+/* Hamburguesa (oculta en escritorio) */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -122,7 +158,7 @@ body {
   display: block;
   height: 3px;
   width: 100%;
-  background: #fdf8ec;
+  background: var(--color-primary-dark);
   border-radius: 2px;
   transition: transform var(--transition), opacity var(--transition);
 }
@@ -133,167 +169,201 @@ body {
 
 /* ================= MAIN ================= */
 .main {
-  max-width: 1140px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.75rem 1.5rem 3rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
 }
 
-/* ================= FRANJA FAMILIAR (antes: banner grande) ================= */
-.familia-strip {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-left: 4px solid var(--color-accent);
+/* ================= FAMILIA CARD ================= */
+.familia-card {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   border-radius: var(--radius);
-  padding: 0.75rem 1.1rem;
+  padding: 1.75rem;
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 1.5rem;
+  color: #fff;
   box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
-.familia-strip__foto img {
-  width: 44px;
-  height: 44px;
+.familia-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--stripe);
+}
+
+.familia-card::after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(224, 167, 46, 0.18);
+}
+
+.familia-card__foto img {
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
   object-fit: cover;
-  background: var(--color-bg);
-  border: 2px solid var(--color-accent);
+  background: rgba(255, 255, 255, 0.25);
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  position: relative;
+  z-index: 1;
 }
 
-.familia-strip__nombre {
+.familia-card__info {
+  position: relative;
+  z-index: 1;
+}
+
+.familia-card__info h2 {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.05rem;
-  color: var(--color-primary-dark);
-  flex: 1;
+  font-size: 1.5rem;
+  margin-bottom: 0.7rem;
+  letter-spacing: -0.01em;
 }
 
 /* ================= BOTONES ================= */
 .btn {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.88rem;
-  transition: transform var(--transition), background var(--transition);
+  font-size: 0.9rem;
+  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
 }
 
 .btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
 
 .btn--primary {
-  background: var(--color-accent);
-  color: var(--color-primary-dark);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px rgba(76, 58, 158, 0.55);
 }
 
-.btn--primary:hover { background: #a8781f; }
+.btn--primary:hover { background: var(--color-primary-dark); }
 
 .btn--secondary {
-  background: var(--color-primary);
-  color: #fdf8ec;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
 }
 
-.btn--secondary:hover { background: var(--color-primary-dark); }
+.btn--secondary:hover { background: rgba(255, 255, 255, 0.26); }
 
 .btn--ghost {
   background: transparent;
-  color: var(--color-ink-light);
+  color: var(--color-text-light);
   border: 1px solid var(--color-border);
+}
+
+.btn--ghost:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .btn--small {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.78rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
 }
 
-.btn--edit { background: var(--color-primary); color: #fdf8ec; }
-.btn--delete { background: var(--color-expense); color: #fdf8ec; }
+.btn--edit { background: var(--color-teal); color: #fff; }
+.btn--edit:hover { background: #16746c; }
 
-/* ================= DASHBOARD ================= */
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.btn--delete { background: var(--color-danger); color: #fff; }
+.btn--delete:hover { background: #b32f2f; }
+
+/* ================= STATS GRID ================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
-/* Línea de totales tipo recibo */
-.stats-strip {
+.stat-card {
+  position: relative;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  display: flex;
-}
-
-.stat-item {
-  flex: 1;
-  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem 1.3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  border-right: 1px dashed var(--color-border);
+  gap: 0.5rem;
+  border: 1px solid var(--color-border);
+  transition: box-shadow var(--transition), transform var(--transition);
 }
 
-.stat-item:last-child { border-right: none; }
+.stat-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
 
-.stat-item__label {
-  font-size: 0.72rem;
-  color: var(--color-ink-light);
+.stat-card__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
-.stat-item__value {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 1.25rem;
+.stat-card__value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-primary-dark);
+  letter-spacing: -0.01em;
 }
 
-/* Dos columnas: categorías | ficha nuevo gasto */
-.dashboard-columns {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 1.25rem;
-  align-items: start;
-}
-
+/* ================= CATEGORIAS BREAKDOWN ================= */
 .categorias-breakdown {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 1.2rem 1.4rem;
-  box-shadow: var(--shadow);
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
 }
 
 .categoria-bar {
-  margin-bottom: 0.9rem;
+  margin-bottom: 1.1rem;
 }
+
+.categoria-bar:last-child { margin-bottom: 0; }
 
 .categoria-bar__label {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
+  font-weight: 500;
   margin-bottom: 0.35rem;
-  color: var(--color-ink-light);
+  color: var(--color-text);
 }
 
 .categoria-bar__label span:last-child {
-  font-family: var(--font-mono);
+  color: var(--color-text-light);
   font-variant-numeric: tabular-nums;
-  color: var(--color-expense);
-  font-weight: 600;
 }
 
 .categoria-bar__track {
   background: var(--color-bg);
-  border: 1px solid var(--color-border);
   border-radius: 20px;
   overflow: hidden;
   height: 9px;
@@ -301,268 +371,79 @@ body {
 
 .categoria-bar__fill {
   height: 100%;
-  background: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-teal));
   border-radius: 20px;
   transition: width 0.4s ease;
 }
 
-/* ================= FORMULARIO (ficha lateral, sticky) ================= */
-.form-section {
+/* ================= FORMULARIO ================= */
+.form-section,
+.lista-section {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-top: 3px solid var(--color-accent);
   border-radius: var(--radius);
-  padding: 1.2rem 1.4rem;
-  box-shadow: var(--shadow);
-  position: sticky;
-  top: 5rem;
+  padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+}
+
+.lista-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.lista-section__header .section-title {
+  margin-bottom: 0;
 }
 
 .form-gasto {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.9rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.1rem;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .form-group label {
-  font-size: 0.8rem;
-  color: var(--color-ink-light);
-  font-weight: 500;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-light);
 }
 
 .form-group input,
 .form-group select {
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  background: #fffefb;
-  color: var(--color-ink);
   width: 100%;
-  min-width: 0;
-}
-
-/* El input de tipo archivo ("Seleccionar archivo") dibuja su propio botón +
-   texto con un ancho mínimo que en móvil se salía del modal. Se fuerza a
-   respetar el ancho del contenedor y a recortar el texto si no cabe. */
-.form-group input[type="file"] {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding: 0.65rem 0.75rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(31, 61, 46, 0.12);
+  box-shadow: 0 0 0 3px rgba(76, 58, 158, 0.12);
 }
 
 .form-actions {
+  grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.8rem;
 }
 
-.form-actions .btn { width: 100%; text-align: center; }
-
-/* ================= DATE PICKER / SELECT PICKER CUSTOM ================= */
-.date-picker,
-.select-picker {
-  position: relative;
-}
-
-.date-picker__input,
-.select-picker__input {
-  width: 100%;
-  text-align: left;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  background: #fffefb;
-  color: var(--color-ink);
-  cursor: pointer;
-}
-
-.date-picker__input:hover,
-.select-picker__input:hover {
-  border-color: var(--color-primary);
-}
-
-.date-picker__input:focus,
-.select-picker__input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(31, 61, 46, 0.12);
-}
-
-.date-picker__panel,
-.select-picker__panel {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: 0 6px 18px rgba(43, 38, 32, 0.14);
-  z-index: 20;
-  padding: 0.8rem;
-}
-
-.date-picker__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.6rem;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--color-primary-dark);
-}
-
-.date-picker__nav {
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  width: 26px;
-  height: 26px;
-  cursor: pointer;
-  color: var(--color-ink);
-  font-size: 1rem;
-  line-height: 1;
-}
-
-.date-picker__nav:hover {
-  background: var(--color-bg);
-}
-
-.date-picker__weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 0.7rem;
-  color: var(--color-ink-light);
-  margin-bottom: 0.3rem;
-}
-
-.date-picker__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-}
-
-.date-picker__day {
-  background: none;
-  border: none;
-  border-radius: 6px;
-  padding: 0.4rem 0;
-  font-size: 0.82rem;
-  font-family: var(--font-mono);
-  color: var(--color-ink);
-  cursor: pointer;
-}
-
-.date-picker__day:hover {
-  background: var(--color-bg);
-}
-
-.date-picker__day--empty {
-  cursor: default;
-}
-
-.date-picker__day--today {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-.date-picker__day--selected {
-  background: var(--color-primary);
-  color: #fdf8ec;
-  font-weight: 600;
-}
-
-.select-picker__panel {
-  padding: 0.4rem;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.select-picker__option {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem 0.6rem;
-  background: none;
-  border: none;
-  border-radius: 6px;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-ink);
-  cursor: pointer;
-}
-
-.select-picker__option:hover {
-  background: var(--color-bg);
-}
-
-.select-picker__option--selected {
-  background: var(--color-bg);
-  color: var(--color-primary-dark);
-  font-weight: 600;
-}
-
-/* ================= LISTA HEADER (título + refrescar) ================= */
-.lista-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.lista-header .section-title {
-  margin-bottom: 0;
-}
-
-#btnRefrescar {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-#refrescarIcono {
-  display: inline-block;
-  transition: transform 0.5s ease;
-}
-
-#refrescarIcono.girando {
-  animation: girar 0.6s linear infinite;
-}
-
-@keyframes girar {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* ================= LISTA / TABLA (libro mayor, ancho completo) ================= */
-.lista-section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.4rem;
-  box-shadow: var(--shadow);
-}
-
+/* ================= TABLA ================= */
 .tabla-wrapper {
   overflow-x: auto;
 }
@@ -575,24 +456,21 @@ body {
 .tabla-gastos th,
 .tabla-gastos td {
   text-align: left;
-  padding: 0.7rem;
+  padding: 0.8rem 0.7rem;
   border-bottom: 1px solid var(--color-border);
   font-size: 0.9rem;
 }
 
 .tabla-gastos th {
-  color: var(--color-ink-light);
+  color: var(--color-text-light);
   text-transform: uppercase;
   font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-.tabla-gastos td:nth-child(3) {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-expense);
-  font-weight: 600;
+.tabla-gastos tbody tr {
+  transition: background var(--transition);
 }
 
 .tabla-gastos tbody tr:hover {
@@ -604,36 +482,43 @@ body {
   gap: 0.4rem;
 }
 
+/* Estado vacío de la tabla */
+.tabla-vacia {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--color-text-light);
+}
+
+.tabla-vacia strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 0.3rem;
+}
+
 /* ================= FOOTER ================= */
 .footer {
   text-align: center;
-  padding: 1.5rem;
-  color: var(--color-ink-light);
-  font-size: 0.78rem;
-  font-family: var(--font-mono);
+  padding: 1.75rem;
+  color: var(--color-text-light);
+  font-size: 0.8rem;
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-  .dashboard-columns {
-    grid-template-columns: 1fr;
-  }
-
-  .form-section {
-    position: static;
-  }
-}
-
 @media (max-width: 768px) {
-  .hamburger { display: flex; }
+  .hamburger {
+    display: flex;
+  }
 
   .nav {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--color-primary);
+    background: var(--color-surface);
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
     max-height: 0;
     overflow: hidden;
@@ -641,28 +526,40 @@ body {
     box-shadow: var(--shadow);
   }
 
-  .nav.active { max-height: 300px; }
+  .nav.active {
+    max-height: 300px;
+  }
 
   .nav__link {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid rgba(253, 248, 236, 0.15);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    width: 100%;
   }
 
-  .stats-strip { flex-direction: column; }
-
-  .stat-item {
-    border-right: none;
-    border-bottom: 1px dashed var(--color-border);
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .stat-item:last-child { border-bottom: none; }
+  .form-gasto {
+    grid-template-columns: 1fr;
+  }
 
-  .familia-strip {
-    flex-wrap: wrap;
+  .familia-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .lista-section__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
   }
 
   /* Tabla -> tarjetas en móvil */
-  .tabla-gastos thead { display: none; }
+  .tabla-gastos thead {
+    display: none;
+  }
 
   .tabla-gastos, .tabla-gastos tbody, .tabla-gastos tr, .tabla-gastos td {
     display: block;
@@ -673,364 +570,47 @@ body {
     margin-bottom: 1rem;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    padding: 0.6rem;
-    background: var(--color-surface);
+    padding: 0.7rem;
   }
 
-  .tabla-gastos td { border: none; padding: 0.4rem 0.2rem; }
+  .tabla-gastos td {
+    border: none;
+    padding: 0.4rem 0.2rem;
+  }
 
   .tabla-gastos td::before {
     content: attr(data-label);
     font-weight: 600;
-    color: var(--color-ink-light);
+    color: var(--color-text-light);
     display: inline-block;
     width: 110px;
   }
 }
 
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= TOAST ================= */
 .toast {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  padding: 0.8rem 1.2rem;
-  border-radius: 8px;
+  padding: 0.85rem 1.3rem;
+  border-radius: var(--radius-sm);
   color: #fff;
   font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: var(--shadow);
   animation: subir 0.3s ease;
   z-index: 999;
 }
-.toast--exito { background: #10b981; }
-.toast--error { background: #ef4444; }
+.toast--exito { background: var(--color-teal); }
+.toast--error { background: var(--color-danger); }
 
 @keyframes subir {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-/* ================= PERFIL ACTIVO (badge en franja familiar) ================= */
-.perfil-activo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  padding: 0.35rem 0.8rem 0.35rem 0.4rem;
-  cursor: pointer;
-  transition: border-color var(--transition);
-}
-.perfil-activo:hover { border-color: var(--color-accent); }
-.perfil-activo__avatar {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fdf8ec;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  font-family: var(--font-display);
-  overflow: hidden;
-}
-.perfil-activo__avatar img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-.perfil-activo__nombre {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-ink);
-}
-
-/* ================= MODAL SELECTOR DE PERFIL ================= */
-.perfil-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(43, 38, 32, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
-  padding: 1.5rem;
-}
-.perfil-modal-overlay[hidden] {
-  display: none;
-}
-.perfil-modal {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  border-top: 4px solid var(--color-accent);
-  padding: 2rem 1.8rem;
-  max-width: 460px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-  overflow-x: hidden;
-}
-.perfil-modal h2 {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--color-primary-dark);
-  margin-bottom: 0.4rem;
-}
-.perfil-modal p {
-  font-size: 0.85rem;
-  color: var(--color-ink-light);
-  margin-bottom: 1.4rem;
-}
-.perfil-modal__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-}
-.perfil-modal__opcion {
-  position: relative;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1rem 0.5rem;
-  cursor: pointer;
-  transition: transform var(--transition), border-color var(--transition), background var(--transition);
-  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-}
-.perfil-modal__opcion:hover {
-  border-color: var(--color-accent);
-  background: #fffefb;
-  transform: translateY(-2px);
-}
-.perfil-modal__opcion .avatar {
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fdf8ec;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: var(--font-display);
-  overflow: hidden;
-}
-.perfil-modal__opcion .avatar img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-.perfil-modal__opcion span.nombre {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-ink);
-  text-align: center;
-}
-.perfil-modal__opcion--agregar {
-  background: transparent;
-  border-style: dashed;
-}
-.perfil-modal__opcion--agregar .avatar {
-  background: transparent;
-  border: 2px dashed var(--color-border);
-  color: var(--color-ink-light);
-  font-size: 1.4rem;
-}
-.perfil-modal__editar {
-  position: absolute;
-  top: 4px; right: 4px;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem;
-  cursor: pointer;
-}
-.perfil-modal__editar:hover { background: var(--color-bg); }
-
-/* ================= FILTRO POR MIEMBRO ================= */
-.lista-header__acciones {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-.filtro-miembro {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.filtro-miembro label {
-  font-size: 0.78rem;
-  color: var(--color-ink-light);
-  white-space: nowrap;
-}
-.select-picker--filtro {
-  min-width: 160px;
-}
-.select-picker--filtro .select-picker__input {
-  padding: 0.4rem 0.7rem;
-  font-size: 0.82rem;
-}
-
-/* ================= PAGINACIÓN ================= */
-.paginacion {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  margin-top: 1.2rem;
-}
-.paginacion button {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 0.4rem 0.9rem;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-ink);
-  cursor: pointer;
-  transition: border-color var(--transition), background var(--transition);
-}
-.paginacion button:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  background: var(--color-bg);
-}
-.paginacion button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.paginacion button.activa {
-  background: var(--color-primary);
-  color: #fdf8ec;
-  border-color: var(--color-primary);
-}
-.paginacion__info {
-  font-size: 0.8rem;
-  color: var(--color-ink-light);
-  font-family: var(--font-mono);
-}
-
-@media (max-width: 768px) {
-  .familia-strip { flex-wrap: wrap; }
-  .lista-header__acciones { width: 100%; justify-content: space-between; }
-  .perfil-modal__grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-.acciones-bloqueadas {
-  font-size: 0.78rem;
-  color: var(--color-ink-light);
-  font-style: italic;
-}
-
-/* ================= FACTURA / IMPRIMIR (estilo factura profesional A4) ================= */
-.factura-print-header,
-.factura-tabla,
-.factura-print-footer { display: none; }
-
-@media print {
-  @page {
-    size: A4 portrait;
-    margin: 16mm 14mm;
-  }
-
-  body { font-size: 12px; color: #1a1a1a; }
-
-  body * { visibility: hidden; }
-
-  .lista-section, .lista-section * { visibility: visible; }
-
-  .lista-section {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    box-shadow: none;
-    border: none;
-    padding: 0;
-  }
-
-  /* Se ocultan la vista normal: header de lista, tabla en pantalla, filtro, botones, paginación */
-  .lista-header,
-  .tabla-wrapper,
-  .paginacion {
-    display: none !important;
-  }
-
-  /* ---- Encabezado tipo factura ---- */
-  .factura-print-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    border-bottom: 2px solid #1f3d2e;
-    padding-bottom: 10px;
-    margin-bottom: 18px;
-  }
-
-  .factura-print-header__marca h1 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1f3d2e;
-  }
-
-  .factura-print-header__subtitulo {
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #6b6255;
-    margin-top: 2px;
-  }
-
-  .factura-print-header__datos {
-    text-align: right;
-    font-size: 0.78rem;
-    line-height: 1.6;
-  }
-
-  .factura-print-header__datos strong {
-    color: #1a1a1a;
-  }
-
-  /* ---- Tabla de la factura ---- */
-  .factura-tabla {
-    display: table;
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-
-  .factura-tabla thead th {
-    background: #1f3d2e;
-    color: #fdf8ec;
-    text-align: left;
-    padding: 8px 10px;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .factura-tabla tbody td {
-    padding: 7px 10px;
-    border-bottom: 1px solid #e3d9c4;
-  }
-
-  .factura-tabla tbody tr:nth-child(even) {
-    background: #f5efe3;
-  }
-
-  .factura-tabla__monto {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .factura-tabla tfoot .factura-tabla__total td {
-    border-top: 2px solid #1f3d2e;
-    border-bottom: none;
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding-top: 10px;
-    color: #1f3d2e;
-  }
-
-  .factura-print-footer {
-    display: block;
-    text-align: center;
-    margin-top: 24px;
-    font-size: 0.75rem;
-    color: #6b6255;
-    font-style: italic;
-  }
 }
